@@ -4,15 +4,19 @@ import primitive_wrapers.ODouble;
 
 public class DemoTestCase {
 	public static void main(String[] args) {
-		//double values[] = {1, 2, 3, 4, 5};
-		//boolean flags[] = {true, true, true, true, true};
-		//Suvat test = new Suvat(values, flags);
+		double values[] = {24, 0, 0, 9.8, 0};
+		boolean flags[] = {true, true, false, true, false};
+		Suvat test = new Suvat(values, flags);
 		
 		//BasicSuvatTest(test);
 		//ResolveTest(test);
 		
-		double sua[] = {2, 2, 2};
-		print(Suvat.Equations.T.sua(sua));
+		//double sua[] = {2, 2, 2};
+		//print(Suvat.Equations.T.sua(sua));
+		
+		test.resolve();
+		print_all(test);
+		
 		
 	}
 	

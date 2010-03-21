@@ -9,14 +9,14 @@ import primitive_wrapers.ODouble;
 public class Suvat {
 	protected static char suvatChar[] = {'s', 'u', 'v', 'a', 't'};	//suvat char array for looping
 	protected boolean suvatFlags[] = {false, false, false, false, false};  //flag array for set or unset variables
-	protected double suvatValues[] = {0, 0, 0, 0, 0};//suvat variables array first element is 's', second 'u' etc..
+	protected double suvatVal[] = {0, 0, 0, 0, 0};//suvat variables array first element is 's', second 'u' etc..
 
 	public Suvat(double values[], boolean flags[]){
 		//'value' - the suvat values
 		//'flags' - set/unset flags for the suvat values
 		
 		//copy the variable values
-		System.arraycopy(values, 0, suvatValues, 0, suvatValues.length);
+		System.arraycopy(values, 0, suvatVal, 0, suvatVal.length);
 		//copy the flag values
 		System.arraycopy(flags, 0, suvatFlags, 0, suvatFlags.length);	 
 	 }
@@ -31,7 +31,7 @@ public class Suvat {
 		if(findInArray(suvatChar, var_name) == (suvatChar.length+1)) return false;
 		//otherwise set the appropriate variable
 		else{
-			suvatValues[findInArray(suvatChar, var_name)] = var_val;
+			suvatVal[findInArray(suvatChar, var_name)] = var_val;
 			suvatFlags[findInArray(suvatChar, var_name)] = true;
 			return true;	//successful
 		}
@@ -74,32 +74,91 @@ public class Suvat {
 		//check if var_name is correct or the variables if set
 		if(i > suvatChar.length || suvatFlags[i] == false ) return false;	//failed to pass checks
 		else{
-			value.val = suvatValues[i];	//""return""  the requested variable value
+			value.val = suvatVal[i];	//""return""  the requested variable value
 			return true; 	//Successful
 		}
 	}
 	
 	public boolean resolve(){
-		//set - contains the suvat variables names that are set by the flags (e.g. "uvt")
-		//unset - hence, stores the unset variable names (e.g. "sa")
-		String set = "", unset = "";
+		String unsetStr = "", setStr = "";	//for variable names
+		double setVal[] = new double [5];	//for variable values (there can only be 5)
 		
-		//adds variables to 'set' or 'unset' accordingly
-		for(int i = 0; i < suvatFlags.length; i++){
-			if(suvatFlags[i]) set += suvatChar[i];
-			else unset += suvatChar[i];;
+		//adds set variables values to setVal,
+		//unset variable names to unsetStr 
+		//and set variables names to setStr
+		for(int i = 0, s = 0 ; i < suvatFlags.length; i++){
+			if(suvatFlags[i]){
+				setStr += suvatChar[i];
+				setVal[s] = suvatVal[i];
+				//setVal is only incremented here since it is only used under if(see above) conditions...
+				s++;
+				//N/B: if s was incremented in the for loops statement, it used to cause a bug with the next
+				//		for loop, since it left all variables in the array as null, from the first variables
+				//		to the next (i.g. s to a, was null; s was in it's proepr place and a wasnt...)
+			}
+			else unsetStr += suvatChar[i];
 		}
-		if(!suvat_eq(set, unset)) System.out.println("Error with resolve loop!");
+		
+		
+		//run through the formulas according to the known(setStr) and unknown(unsetStr) variables
+		for(int i = 0; i < unsetStr.length(); i++){
+			//---for debuging!---
+			print("i at "+i+". unsetStr[i] = "+unsetStr.charAt(i));
+			//-------------------
+			switch(unsetStr.charAt(i)){
+			//find which variables needs to be resolved and resolve it according to known variables
+			case 's':
+				int s = findInArray(suvatChar,'s');		//find which index in array is it
+				if(setStr.equals("uvt")) suvatVal[s] = Equations.S.uvt(setVal);
+				else if(setStr.equals("uat")) suvatVal[s] = Equations.S.uat(setVal);
+				else if(setStr.equals("vat")) suvatVal[s] = Equations.S.vat(setVal);
+				else if(setStr.equals("uva")){
+					suvatVal[s] = Equations.S.uva(setVal);
+				}
+				suvatFlags[s] = true;	//Variable has to be set as set...
+				break;
+			case 'u':
+				int u = findInArray(suvatChar,'u');		//find which index in array is it
+				if(setStr.equals("svt")) suvatVal[u] = Equations.U.svt(setVal);
+				else if(setStr.equals("sat")) suvatVal[u] = Equations.U.sat(setVal);
+				else if(setStr.equals("sva")) suvatVal[u] = Equations.U.sva(setVal);
+				else if(setStr.equals("vat")) suvatVal[u] = Equations.U.vat(setVal);
+				suvatFlags[u] = true;	//Variable has to be set as set...
+				break;
+			case 'v':
+				int v = findInArray(suvatChar,'v');		//find which index in array is it
+				if(setStr.equals("sut")) suvatVal[v] = Equations.V.sut(setVal);
+				else if(setStr.equals("sat")) suvatVal[v] = Equations.V.sat(setVal);
+				else if(setStr.equals("sua")) suvatVal[v] = Equations.V.sua(setVal);
+				else if(setStr.equals("uat")) suvatVal[v] = Equations.V.uat(setVal);
+				suvatFlags[v] = true;	//Variable has to be set as set...
+				break;
+			case 'a':
+				int a = findInArray(suvatChar,'a');		//find which index in array is it
+				if(setStr.equals("sut")) suvatVal[a] = Equations.A.sut(setVal);
+				else if(setStr.equals("svt")) suvatVal[a] = Equations.A.svt(setVal);
+				else if(setStr.equals("suv")) suvatVal[a] = Equations.A.suv(setVal);
+				else if(setStr.equals("uvt")) suvatVal[a] = Equations.A.uvt(setVal);
+				suvatFlags[a] = true;	//Variable has to be set as set...
+				break;
+			case 't':
+				int t = findInArray(suvatChar,'t');		//find which index in array is it
+				if(setStr.equals("suv")) suvatVal[t] = Equations.T.suv(setVal);
+				else if(setStr.equals("sua")) suvatVal[t] = Equations.T.sua(setVal);
+				else if(setStr.equals("sva")) suvatVal[t] = Equations.T.sva(setVal);
+				else if(setStr.equals("uva")) suvatVal[t] = Equations.T.uva(setVal);
+				suvatFlags[t] = true;	//Variable has to be set as set...
+				break;
+			default:
+				return false;	//something went wrong
+			}
+			
+		}
 		
 		return true;
 	}
 	
-	private boolean suvat_eq(String set, String unset){
-		System.out.println("Set: " + set);
-		System.out.println("Unset: " + unset);
-		
-		return true;
-	}
+	
 	
 	protected static int findInArray(char array[], char f){
 		//this simply finds a char in the array and returns it's index
@@ -122,7 +181,11 @@ public class Suvat {
 				return (vat[0]*vat[2]-0.5*vat[1]*vat[2]*vat[2]);
 			}
 			static double uva(double uva[]){
-				return ((uva[1]*uva[1] - uva[0]*uva[0])/2*uva[2]);
+				print("Inside Equations.S.uva() !!!");
+				print("v^2 = "+uva[1]*uva[1]);
+				print("u^2 = " + uva[0]*uva[0]);
+				print("uva[2] = "+ uva[2]);
+				return ((uva[1]*uva[1] - uva[0]*uva[0])/(2*uva[2]));
 			}
 		}
 		static class U{
@@ -184,6 +247,7 @@ public class Suvat {
 			}
 		}
 	}
+	static private void print(Object out){ System.out.println(out);}
 }
 
 	/*
@@ -219,7 +283,7 @@ public class Suvat {
 	 * u:	1.svt	2.sat	4.sva	5.vat
 	 * v:	1.sut	3.sat	4.sua	5.uat
 	 * a:	2.sut	3.svt	4.suv	5.uvt
-	 * t:	1.suv	2.sua	3.svt	5.uva
+	 * t:	1.suv	2.sua	3.sva	5.uva
 	 * 
 	 * In the class 'Equations' there are 5 classes each resembling on of the suvat variables.
 	 * Each class has a function which calculates and returns the appropriate suvat variable
