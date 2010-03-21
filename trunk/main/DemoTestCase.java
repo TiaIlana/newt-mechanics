@@ -4,18 +4,18 @@ import primitive_wrapers.ODouble;
 
 public class DemoTestCase {
 	public static void main(String[] args) {
-		double values[] = {24, 0, 0, 9.8, 0};
-		boolean flags[] = {true, true, false, true, false};
-		Suvat test = new Suvat(values, flags);
+		//double values[] = {24, 0, 0, 9.8, 0};
+		//boolean flags[] = {true, true, false, true, false};
+		//Suvat test = new Suvat(values, flags);
 		
-		//BasicSuvatTest(test);
-		//ResolveTest(test);
+		//load up the MainForm
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new MainForm().setVisible(true);
+			}
+		});
 		
-		//double sua[] = {2, 2, 2};
-		//print(Suvat.Equations.T.sua(sua));
 		
-		test.resolve();
-		print_all(test);
 		
 		
 	}
@@ -52,4 +52,5 @@ public class DemoTestCase {
 		test.clear('u');
 		test.resolve();	//'v' and 'u' unset
 	}
+
 }

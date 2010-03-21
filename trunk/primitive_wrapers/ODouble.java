@@ -5,4 +5,5 @@ public class ODouble {
 	public ODouble(double val){
 		this.val = val;
 	}
+	public ODouble(){};
 }

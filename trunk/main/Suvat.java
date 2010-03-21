@@ -71,11 +71,18 @@ public class Suvat {
 		 *	value - a reference which is used to return values of variables
 		 */
 		int i = findInArray(suvatChar, var_name); 	//retrieve array index
-		//check if var_name is correct or the variables if set
+		//check if var_name is correct or the variables is set
 		if(i > suvatChar.length || suvatFlags[i] == false ) return false;	//failed to pass checks
 		else{
-			value.val = suvatVal[i];	//""return""  the requested variable value
-			return true; 	//Successful
+			if(value != null){
+				value.val = suvatVal[i];	//""return""  the requested variable value
+				return true; 	//Successful
+			}
+			else if (value == null){		//it might now have been initialised...
+				value = new ODouble(suvatVal[i]);
+				return true;
+			}
+		return false;	//something went wrong...
 		}
 	}
 	
@@ -102,9 +109,6 @@ public class Suvat {
 		
 		//run through the formulas according to the known(setStr) and unknown(unsetStr) variables
 		for(int i = 0; i < unsetStr.length(); i++){
-			//---for debuging!---
-			print("i at "+i+". unsetStr[i] = "+unsetStr.charAt(i));
-			//-------------------
 			switch(unsetStr.charAt(i)){
 			//find which variables needs to be resolved and resolve it according to known variables
 			case 's':
@@ -160,7 +164,7 @@ public class Suvat {
 	
 	
 	
-	protected static int findInArray(char array[], char f){
+	static int findInArray(char array[], char f){
 		//this simply finds a char in the array and returns it's index
 		for(int i = 0; i < array.length; i++){
 			if(array[i]==f) return i;
