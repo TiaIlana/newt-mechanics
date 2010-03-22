@@ -15,17 +15,18 @@ import Forces.Force;
  * @author  __USER__
  */
 public class MainForm extends javax.swing.JFrame {
-	Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
-        javax.swing.DefaultListModel list = new javax.swing.DefaultListModel();
+    Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
 	/** Creates new form MainForm */
-	public MainForm() {
-		initComponents();
-		//lstForces = new javax.swing.JList(list);
-	}
+    public MainForm() {
+            initComponents();
+            //list = new javax.swing.DefaultListModel();
+            //lstForces = new javax.swing.JList(list);
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+    	list = new javax.swing.DefaultListModel();
+        lstForces = new javax.swing.JList(list);
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -48,7 +49,7 @@ public class MainForm extends javax.swing.JFrame {
         txtU = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstForces = new javax.swing.JList(list);
+        lstForces = new javax.swing.JList();
         jLabel6 = new javax.swing.JLabel();
         btnRemove = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
@@ -58,6 +59,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         txtAngle = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        btnClearAll = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -225,6 +227,8 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel15.setText("<html>&deg</html>");
 
+        btnClearAll.setText("Clear All");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -250,6 +254,7 @@ public class MainForm extends javax.swing.JFrame {
                                         .addComponent(txtMagnitude, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel14))
+                            .addComponent(btnClearAll)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnRemove))))
@@ -259,8 +264,10 @@ public class MainForm extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
@@ -272,15 +279,14 @@ public class MainForm extends javax.swing.JFrame {
                                 .addComponent(jLabel13)
                                 .addComponent(txtAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                         .addComponent(btnAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRemove))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(btnRemove)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(btnClearAll))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13))
         );
 
         jLabel15.getAccessibleContext().setAccessibleName("lblAngle");
@@ -322,7 +328,7 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        // TODO add your handling code here:
+        lstForces.getSelectedIndex();
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void txtMagnitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMagnitudeActionPerformed
@@ -345,6 +351,8 @@ public class MainForm extends javax.swing.JFrame {
         //clear the entry fields for new entries
         txtAngle.setText("");
         txtMagnitude.setText("");
+        //update the JTable 'lstForces'
+        lstForces.setModel(list);
     }
 
 	private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {
@@ -405,6 +413,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btCalcualte;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnClearAll;
     private javax.swing.JButton btnRemove;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -431,7 +440,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JList lstForces;
     private javax.swing.JTextField txtA;
     private javax.swing.JTextField txtAngle;
     private javax.swing.JTextField txtMagnitude;
@@ -440,7 +448,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtU;
     private javax.swing.JTextField txtV;
     // End of variables declaration//GEN-END:variables
-
+    private javax.swing.JList lstForces;
+    private javax.swing.DefaultListModel list;
 }
 
 

@@ -18,11 +18,16 @@ public class Object {
     public Object(double mass){
         this.mass = mass;   //asign mass
         Force force = new Force(g*mass, 270);   //temporrary
-        forces.add(force);  //F=ma; 270 degrees is acting north
+        this.forces.add(force);  //F=ma; 270 degrees is acting north
+        force = new Force((-g)*mass, 270);    //reaction force; reusing temp variables
+        this.forces.add(force);
     }
     public Object(double mass, Force... forces){    //any number of forces can be provided
         this.mass = mass;   //asign mass
-        forces[0] = new Force(g*mass, 270); //F=ma; 270 degrees is acting north
+        Force force = new Force(g*mass, 270);     //temporrary
+        this.forces.add(force);     ////F=ma; 270 degrees is acting north
+        force = new Force((-g)*mass, 270);  //reaction force; reusing temp again
+        this.forces.add(force); //add the reaction force
         //asign the passed amount of forces
         addForces(forces);
     }
