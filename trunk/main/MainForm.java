@@ -25,8 +25,7 @@ public class MainForm extends javax.swing.JFrame {
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-    	list = new javax.swing.DefaultListModel();
-        lstForces = new javax.swing.JList(list);
+
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -228,6 +227,11 @@ public class MainForm extends javax.swing.JFrame {
         jLabel15.setText("<html>&deg</html>");
 
         btnClearAll.setText("Clear All");
+        btnClearAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearAllActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -284,9 +288,11 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRemove)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnClearAll))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13))
+                        .addComponent(btnClearAll)
+                        .addGap(13, 13, 13))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         jLabel15.getAccessibleContext().setAccessibleName("lblAngle");
@@ -328,7 +334,20 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        lstForces.getSelectedIndex();
+        //retrieve the user selected inndex
+        int selected = lstForces.getSelectedIndex();
+        //check if anything is selected
+        if(selected == -1){ //getSelectedIndex() returns -1 if nothing is selected
+            //display message
+            javax.swing.JOptionPane.showMessageDialog(null, 
+                    "Please select and item to be removed...", "Error",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+        else{
+            //remove the item from the list according to selected index
+            list.remove(selected);
+        }
+
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void txtMagnitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMagnitudeActionPerformed
@@ -338,6 +357,21 @@ public class MainForm extends javax.swing.JFrame {
     private void txtAngleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAngleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAngleActionPerformed
+
+    private void btnClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllActionPerformed
+        //confirm clear all
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to delere all forces?",
+                "Confirm deletion",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+        //if 'Yes' is selcted confirm is 1
+        if(confirm == 1){
+            //clear all the elements in the tables
+            list.removeAllElements();
+            //clear all the forces applied to the object
+            object.clearAllForce();
+        }
+    }//GEN-LAST:event_btnClearAllActionPerformed
     
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {
         //retrieve the entered values
@@ -440,6 +474,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
+    javax.swing.JList lstForces;
+    javax.swing.DefaultListModel list = new javax.swing.DefaultListModel();
+    lstForces = new javax.swing.JList(list);
     private javax.swing.JTextField txtA;
     private javax.swing.JTextField txtAngle;
     private javax.swing.JTextField txtMagnitude;

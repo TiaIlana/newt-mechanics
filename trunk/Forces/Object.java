@@ -39,6 +39,11 @@ public class Object {
         }
     }
 
+    public void clearAllForce(){
+        //clears all forces
+        forces.clear();
+    }
+
     //the following function will resolve the forces into one (overall)
     public void resolve(){
         //find all forces which point north or south with no angle variation
