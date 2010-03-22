@@ -1,5 +1,6 @@
 package main;
 
+import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
 
 public class DemoTestCase {
