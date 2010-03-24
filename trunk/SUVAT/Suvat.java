@@ -3,9 +3,6 @@ package SUVAT;
 import java.lang.Math;
 import primitive_wrapers.ODouble;
 
-/**
- * @author confuded
- */
 public class Suvat {
 	public static char suvatChar[] = {'s', 'u', 'v', 'a', 't'};	//suvat char array for looping
 	protected boolean suvatFlags[] = {false, false, false, false, false};  //flag array for set or unset variables
@@ -185,10 +182,6 @@ public class Suvat {
 				return (vat[0]*vat[2]-0.5*vat[1]*vat[2]*vat[2]);
 			}
 			static double uva(double uva[]){
-				print("Inside Equations.S.uva() !!!");
-				print("v^2 = "+uva[1]*uva[1]);
-				print("u^2 = " + uva[0]*uva[0]);
-				print("uva[2] = "+ uva[2]);
 				return ((uva[1]*uva[1] - uva[0]*uva[0])/(2*uva[2]));
 			}
 		}
@@ -251,7 +244,7 @@ public class Suvat {
 			}
 		}
 	}
-	static private void print(Object out){ System.out.println(out);}
+
 }
 
 	/*

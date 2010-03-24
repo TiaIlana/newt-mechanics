@@ -39,9 +39,22 @@ public class Object {
         }
     }
 
+    public void setMass(double mass){
+        //set's the mass of the object
+        this.mass = mass;
+    }
+
     public void clearAllForce(){
         //clears all forces
         forces.clear();
+    }
+
+    //retriever functions
+    public Force getVertically(){   //returns the vertical force resolved
+        return vertically;
+    }
+    public Force getHorizontally(){
+        return horizontally;    //returns the horizontal force resolved
     }
 
     //the following function will resolve the forces into one (overall)
