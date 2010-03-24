@@ -66,6 +66,7 @@ public class Object {
     //the following function will resolve the forces into one (overall)
     public void resolve(){
         Force vertically = new Force(0, 90), horizontally = new Force(0);
+
         //find all forces which point north or south with no angle variation
         //and all which point west or east with no angle variation...
         //otherwise deal with the angles and add force to
@@ -112,7 +113,9 @@ public class Object {
                 //in the class java.lang.Math are performed in radians,
                 //the angle must be first converted to radians and then
                 //back to degrees to be multiplied by the magnitude of the force...
-                angle = Math.toRadians(angle);
+                //the following 'if' check what format the angle is and converts
+                //if nessecary:
+                if(forceCurrent.getAngleFormat())   angle = Math.toRadians(angle);  //angle is in degrees
 
 
                 //there are for quadrants on the j and i axies relative to the object:

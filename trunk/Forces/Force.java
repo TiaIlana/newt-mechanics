@@ -2,9 +2,12 @@
 
 package Forces;
 
+import java.text.DecimalFormat;
+
 public class Force {
     //the angle is recorder 0 if it is poiting east at 0 degrees
-    private double angle;  //stores the angle of the force (direction) in degrees
+    private double angle;  //stores the angle of the force (direction)
+    private boolean angleF;  //true - degrees, false - radians
     private double magnitude;   //stores the magnitude of the force in newtons
 
     //constructors
@@ -16,15 +19,24 @@ public class Force {
     public Force(double magnitude, double angle){
         this.magnitude = magnitude;
         setAngle(angle);
+        angleF = true;  //by default we use degrees
     }
     public Force(Force force){
         this.magnitude = force.getMagnitude();
         this.angle = force.getAngle();
     }
+    public Force(double magnitude, double angle, boolean angleF){
+        this.magnitude = magnitude;
+        setAngle(angle);
+        this.angleF = angleF;
+    }
 
     //retriever functions
     public double getAngle(){
         return angle;
+    }
+    public boolean getAngleFormat(){    //defrees or radians?
+        return angleF;
     }
     public double getMagnitude(){
         return magnitude;
@@ -54,11 +66,58 @@ public class Force {
     public void setMagnitude(double magnitude){
         this.magnitude = magnitude;
     }
+    public void setAngle(double angle, boolean angleF){
+        setAngle(angle);    //set the angle
+        this.angleF = angleF;   //set the angle format
+    }
 
     //overiding toString method!
     //toString returns the string representation of this object
     public String toString(){
-        //"\u00B0" - is the degree sign
-        return (Double.toString(magnitude)+"N "+Double.toString(angle)+"\u00B0");
+        //prepare number formating
+        DecimalFormat format = new DecimalFormat("###.###");
+        //check if angle in degree or radiance
+        if (angleF){ //true represents degrees
+            return (format.format(magnitude)+"N "
+                    +format.format(this.angle)+"\u00B0");
+        }
+        else{   //it will be false, thus radians
+            return (format.format(magnitude)+"N "
+                    +format.format(this.angle)+"rad");
+        }
+    }
+    //the following method is same as above, except the paramater
+    //defines which format to return the angle in (in the string)
+    //(a forced formating option)
+    public String toString(boolean angleF){
+        //prepare number formating
+        DecimalFormat format = new DecimalFormat("###.###");
+        if (this.angleF){ //true represents degrees (force's angle)
+            if(angleF){ //force's angle is in degrees, degrees were requested
+                //thus return as is
+                return (format.format(magnitude)+"N "+
+                    format.format(this.angle)+"\u00B0");
+            }
+            else{   //force's angle is in degree, radians were requested
+                //thus return converting angle into radians...
+                return (format.format(magnitude)+"N "+
+                    format.format(Math.toRadians(this.angle))
+                    +"rad");
+            }
+                
+        }
+        else{   //it will be false, thus radians    (force's angle)
+            if(angleF){ //force's angle is in radians, degrees were requested
+                //thus convert to degrees
+                return (format.format(magnitude)+"N "+
+                    format.format(Math.toDegrees(this.angle))
+                    +"\u00B0");
+            }
+            else{   //force's angle is in radians, radians were requested
+                //return as is
+                return (format.format((magnitude))+"N "+
+                    format.format((this.angle))+"rad");
+            }
+        }
     }
 }

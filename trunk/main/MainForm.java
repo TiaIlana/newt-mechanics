@@ -9,6 +9,7 @@ package main;
 import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
 import Forces.Force;
+
 import javax.swing.UIManager;
 
 /**
@@ -17,12 +18,13 @@ import javax.swing.UIManager;
  */
 public class MainForm extends javax.swing.JFrame {
     Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
+    Options options = new Options();  //for setting options
+    
 	/** Creates new form MainForm */
     public MainForm() {
+        //the following  try and catch code set the system's default look
+        // and feel (theme) to System's default...
         try {
-
-        //the following 7 lines of code set the system's default look
-        // and feel (theme). The exceptions are not handleled...
         UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
         }
@@ -40,6 +42,7 @@ public class MainForm extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        btngrpAngle = new javax.swing.ButtonGroup();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -48,7 +51,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         btnClear = new javax.swing.JButton();
         txtT = new javax.swing.JTextField();
-        btCalcualte = new javax.swing.JButton();
+        btnCalculate = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -76,7 +79,7 @@ public class MainForm extends javax.swing.JFrame {
         txtMagnitude = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtAngle = new javax.swing.JTextField();
-        jLabel15 = new javax.swing.JLabel();
+        lblAngle = new javax.swing.JLabel();
         btnClearAll = new javax.swing.JButton();
         chkMass = new javax.swing.JCheckBox();
         txtMass = new javax.swing.JTextField();
@@ -86,11 +89,12 @@ public class MainForm extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         txtVerResolved = new javax.swing.JTextField();
         btnResolveForces = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jLabel16 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        radDegrees = new javax.swing.JRadioButton();
+        radRadians = new javax.swing.JRadioButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -115,11 +119,17 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        btCalcualte.setText("Calculate");
-        btCalcualte.setToolTipText("Calculate the missing suvat values...");
-        btCalcualte.addActionListener(new java.awt.event.ActionListener() {
+        txtT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTKeyPressed(evt);
+            }
+        });
+
+        btnCalculate.setText("Calculate");
+        btnCalculate.setToolTipText("Calculate the missing suvat values...");
+        btnCalculate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCalcualteActionPerformed(evt);
+                btnCalculateActionPerformed(evt);
             }
         });
 
@@ -129,19 +139,43 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel1.setText("S:");
 
+        txtA.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtAKeyPressed(evt);
+            }
+        });
+
+        txtS.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSKeyPressed(evt);
+            }
+        });
+
         jLabel5.setText("T:");
 
         jLabel4.setText("A:");
 
         jLabel3.setText("V:");
 
+        txtV.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtVKeyPressed(evt);
+            }
+        });
+
+        txtU.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUKeyPressed(evt);
+            }
+        });
+
         jLabel17.setText("SUVAT variables:");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Euqations used:"));
 
-        txtEq1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtEq1.setFont(new java.awt.Font("Tahoma", 0, 14));
 
-        txtEq2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtEq2.setFont(new java.awt.Font("Tahoma", 0, 14));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -196,7 +230,7 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel17))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btCalcualte)
+                    .addComponent(btnCalculate)
                     .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -204,8 +238,8 @@ public class MainForm extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -233,7 +267,7 @@ public class MainForm extends javax.swing.JFrame {
                                     .addComponent(txtA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btCalcualte)
+                                .addComponent(btnCalculate)
                                 .addGap(7, 7, 7)
                                 .addComponent(btnClear)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -241,12 +275,12 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(txtT, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12))))
-                .addGap(47, 47, 47))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         btnClear.getAccessibleContext().setAccessibleName("btnClear");
         txtT.getAccessibleContext().setAccessibleName("txtT");
-        btCalcualte.getAccessibleContext().setAccessibleName("btnCalculate");
+        btnCalculate.getAccessibleContext().setAccessibleName("btnCalculate");
         jLabel2.getAccessibleContext().setAccessibleName("lblU");
         jLabel1.getAccessibleContext().setAccessibleName("lblS");
         txtA.getAccessibleContext().setAccessibleName("txtA");
@@ -283,21 +317,21 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel13.setText("Angle:");
 
-        txtMagnitude.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMagnitudeActionPerformed(evt);
+        txtMagnitude.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMagnitudeKeyPressed(evt);
             }
         });
 
         jLabel14.setText("N");
 
-        txtAngle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAngleActionPerformed(evt);
+        txtAngle.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtAngleKeyPressed(evt);
             }
         });
 
-        jLabel15.setText("<html>&deg");
+        lblAngle.setText("<html>&deg");
 
         btnClearAll.setText("Clear All");
         btnClearAll.addActionListener(new java.awt.event.ActionListener() {
@@ -364,8 +398,10 @@ public class MainForm extends javax.swing.JFrame {
                 .addComponent(txtVerResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnResolveForces)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
+
+        jLabel16.setText("kg");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -378,90 +414,127 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel13)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtAngle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtMagnitude, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel14))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel13)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtAngle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lblAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnClearAll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnRemove, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(chkMass)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMass, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
-                            .addComponent(btnClearAll)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRemove, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addGap(18, 18, 18)
-                        .addComponent(pnlForcesResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtMass, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(3, 3, 3)
+                                .addComponent(txtMagnitude, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))))
                     .addComponent(jLabel6))
-                .addContainerGap())
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel16))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)))
+                .addGap(18, 18, 18)
+                .addComponent(pnlForcesResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlForcesResolved, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(pnlForcesResolved, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chkMass)
+                            .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(txtMagnitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(chkMass)
-                                .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel7)
-                                .addComponent(txtMagnitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel14))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel13)
-                                    .addComponent(txtAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnAdd)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnRemove)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnClearAll))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                                .addComponent(jLabel13)
+                                .addComponent(txtAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnClearAll)))
+                .addContainerGap())
         );
 
-        jLabel15.getAccessibleContext().setAccessibleName("lblAngle");
+        lblAngle.getAccessibleContext().setAccessibleName("lblAngle");
 
         jTabbedPane2.addTab("Forces", jPanel2);
 
-        jMenu1.setText("File");
+        jLabel18.setText("Select from the following list of option:");
 
-        jMenuItem1.setText("Exit");
-        jMenuItem1.setToolTipText("Quits the applications.");
-        jMenu1.add(jMenuItem1);
-        jMenuItem1.getAccessibleContext().setAccessibleDescription("Quits the application.");
+        jLabel21.setText("Angle measured in:");
 
-        jMenuBar1.add(jMenu1);
+        btngrpAngle.add(radDegrees);
+        radDegrees.setSelected(true);
+        radDegrees.setText("Degrees");
+        radDegrees.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radDegreesActionPerformed(evt);
+            }
+        });
 
-        jMenu2.setText("Edit");
+        btngrpAngle.add(radRadians);
+        radRadians.setText("Radians");
+        radRadians.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radRadiansActionPerformed(evt);
+            }
+        });
 
-        jMenuItem2.setText("Options");
-        jMenuItem2.setToolTipText("Configure settings...");
-        jMenu2.add(jMenuItem2);
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel18))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(radDegrees)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(radRadians)))
+                .addContainerGap(155, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(radDegrees)
+                    .addComponent(radRadians))
+                .addContainerGap(144, Short.MAX_VALUE))
+        );
 
-        jMenuBar1.add(jMenu2);
-        jMenu2.getAccessibleContext().setAccessibleDescription("");
-
-        setJMenuBar(jMenuBar1);
+        jTabbedPane2.addTab("Options", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -471,7 +544,7 @@ public class MainForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
         );
 
         pack();
@@ -501,14 +574,6 @@ public class MainForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnRemoveActionPerformed
 
-    private void txtMagnitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMagnitudeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMagnitudeActionPerformed
-
-    private void txtAngleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAngleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAngleActionPerformed
-
     private void btnClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearAllActionPerformed
         //confirm clear all
         int confirm = javax.swing.JOptionPane.showConfirmDialog(null,
@@ -517,8 +582,12 @@ public class MainForm extends javax.swing.JFrame {
                 javax.swing.JOptionPane.YES_NO_OPTION);
         //if 'Yes' is selcted confirm is 1
         if(confirm == 1){
-            //clear all the elements in the tables
+            //clear all the elements in the list
             list.removeAllElements();
+            //clear all forces from list array of forces
+            listForces.clear();
+            //update lstForces
+            lstForces.setModel(list);
             //clear all the forces applied to the object
             object.clearAllForce();
             //disable the resolve button
@@ -553,123 +622,186 @@ public class MainForm extends javax.swing.JFrame {
         }
 
         object.resolve();   //resolve the forces
+
         //display them...
-        txtHorResolved.setText(object.getHorizontally().toString());
-        txtVerResolved.setText(object.getVertically().toString());
+        txtHorResolved.setText(object.getHorizontally().toString(options.getAngle()));
+        txtVerResolved.setText(object.getVertically().toString(options.getAngle()));
     }//GEN-LAST:event_btnResolveForcesActionPerformed
 
     private void txtMassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMassKeyTyped
             //something has been entered, thus...
             btnResolveForces.setEnabled(true);  //since mass produces a force (with gravity)
     }//GEN-LAST:event_txtMassKeyTyped
-    
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {
-        //retrieve the entered values
-        double magnitude = Double.parseDouble(txtMagnitude.getText());
-        double angle = Double.parseDouble(txtAngle.getText());
-        //add the force to the object
-        Force force = new Force(magnitude, angle);
-        //update the list box
-        list.addElement(force);     //N/B: seems to automatically invokes toString...
-        //update the list of forces
-        listForces.add(force);
-        //clear the entry fields for new entries
-        txtAngle.setText("");
-        txtMagnitude.setText("");
-        //update the JTable 'lstForces'
-        lstForces.setModel(list);
-        //enable the calculate forces button
-        btnResolveForces.setEnabled(true);
-    }
 
-	private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {
-		txtS.setText(null);
-		txtU.setText(null);
-		txtV.setText(null);
-		txtA.setText(null);
-		txtT.setText(null);
-	}
+    private void txtSKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnCalculate.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtSKeyPressed
 
-	private void btCalcualteActionPerformed(java.awt.event.ActionEvent evt) {
-		double values[] = new double[5]; //for values storage
-		boolean flags[] = new boolean[5]; //if value is set
-                int missing_count = 0;  //counter for unset values
-		//build the two arrays
-		if (!txtS.getText().isEmpty()) {
-			values[0] = Double.parseDouble(txtS.getText());
-			flags[0] = true;
-		}
-                else{
-                   missing_count++;    //values is not set
-                }
-		if (!txtU.getText().isEmpty()) {
-			values[1] = Double.parseDouble(txtU.getText());
-			flags[1] = true;
-		}
-                else{
-                   missing_count++;    //values is not set
-                }
-		if ((!txtV.getText().isEmpty())) {
-			values[2] = Double.parseDouble(txtV.getText());
-			flags[2] = true;
-		}
-                else{
-                   missing_count++;    //values is not set
-                }
-		if ((!txtA.getText().isEmpty())) {
-			values[3] = Double.parseDouble(txtA.getText());
-			flags[3] = true;
-		}
-                else{
-                   missing_count++;    //values is not set
-                }
-		if ((!txtT.getText().isEmpty())) {
-			values[4] = Double.parseDouble(txtT.getText());
-			flags[4] = true;
-		}
-                else{
-                   missing_count++;    //values is not set
-                }
+    private void txtUKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnCalculate.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtUKeyPressed
 
-                
+    private void txtVKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtVKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnCalculate.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtVKeyPressed
 
-                //check if there are only 2 suvat missing or less
-                if(missing_count <= 2){
-                    //construct a suvat object
-                    Suvat suvat = new Suvat(values, flags);
-                    System.out.println(suvat.toString());   //debug
-                    //resolve the values
-                    suvat.resolve();
+    private void txtAKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnCalculate.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtAKeyPressed
 
-                    //update values
-                    ODouble newValues[] = new ODouble[5];
-                    for (int i = 0; i < newValues.length; i++) {
-                            newValues[i] = new ODouble(); //initialise object
-                            suvat.retrieve(Suvat.suvatChar[i], newValues[i]); //retrieve value
-                            values[i] = newValues[i].val; //update the value
-                    }
-                    //update on screen values
-                    txtS.setText(Double.toString(values[0]));
-                    txtU.setText(Double.toString(values[1]));
-                    txtV.setText(Double.toString(values[2]));
-                    txtA.setText(Double.toString(values[3]));
-                    txtT.setText(Double.toString(values[4]));
-                }
-                else{   //less than 3 variables entered
-                    javax.swing.JOptionPane.showMessageDialog(null,
-                            "Please enter at least 3 SUVAT values!",
-                            "Error",
-                            javax.swing.JOptionPane.WARNING_MESSAGE);
-                }
-	}
+    private void txtTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnCalculate.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtTKeyPressed
+
+    private void txtMagnitudeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMagnitudeKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnAdd.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtMagnitudeKeyPressed
+
+    private void txtAngleKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAngleKeyPressed
+        if(evt.getKeyCode() == 10){ //if user presed enter
+            btnAdd.doClick();     //initiate the Calcluate button event
+        }
+    }//GEN-LAST:event_txtAngleKeyPressed
+
+    private void btnCalculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalculateActionPerformed
+        double values[] = new double[5]; //for values storage
+        boolean flags[] = new boolean[5]; //if value is set
+        int missing_count = 0;  //counter for unset values
+        //build the two arrays
+        if (!txtS.getText().isEmpty()) {
+                values[0] = Double.parseDouble(txtS.getText());
+                flags[0] = true;
+        }
+        else{
+           missing_count++;    //values is not set
+        }
+        if (!txtU.getText().isEmpty()) {
+                values[1] = Double.parseDouble(txtU.getText());
+                flags[1] = true;
+        }
+        else{
+           missing_count++;    //values is not set
+        }
+        if ((!txtV.getText().isEmpty())) {
+                values[2] = Double.parseDouble(txtV.getText());
+                flags[2] = true;
+        }
+        else{
+           missing_count++;    //values is not set
+        }
+        if ((!txtA.getText().isEmpty())) {
+                values[3] = Double.parseDouble(txtA.getText());
+                flags[3] = true;
+        }
+        else{
+           missing_count++;    //values is not set
+        }
+        if ((!txtT.getText().isEmpty())) {
+                values[4] = Double.parseDouble(txtT.getText());
+                flags[4] = true;
+        }
+        else{
+           missing_count++;    //values is not set
+        }
+
+
+
+        //check if there are only 2 suvat missing or less
+        if(missing_count <= 2){
+            //construct a suvat object
+            Suvat suvat = new Suvat(values, flags);
+            //resolve the values
+            suvat.resolve();
+
+            //update values
+            ODouble newValues[] = new ODouble[5];
+            for (int i = 0; i < newValues.length; i++) {
+                    newValues[i] = new ODouble(); //initialise object
+                    suvat.retrieve(Suvat.suvatChar[i], newValues[i]); //retrieve value
+                    values[i] = newValues[i].val; //update the value
+            }
+            //update on screen values
+            txtS.setText(Double.toString(values[0]));
+            txtU.setText(Double.toString(values[1]));
+            txtV.setText(Double.toString(values[2]));
+            txtA.setText(Double.toString(values[3]));
+            txtT.setText(Double.toString(values[4]));
+        }
+        else{   //less than 3 variables entered
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Please enter at least 3 SUVAT values!",
+                    "Error",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCalculateActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        //check if angle and magnitude have been entered
+        if(!txtAngle.getText().isEmpty() && !txtMagnitude.getText().isEmpty()){
+            //retrieve the entered values
+            double magnitude = Double.parseDouble(txtMagnitude.getText());
+            double angle = Double.parseDouble(txtAngle.getText());
+            Force force = new Force(magnitude, angle, options.getAngle());    //for entered force
+            //update the list box (angle is set according to option)
+            list.addElement(force.toString());
+            //update the list of forces
+            listForces.add(force);
+            //clear the entry fields for new entries
+            txtAngle.setText("");
+            txtMagnitude.setText("");
+            //update the JTable 'lstForces'
+            lstForces.setModel(list);
+            //enable the calculate forces button
+            btnResolveForces.setEnabled(true);
+        }
+        else{   //no values for magnitude and angle have bee entered
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Please enter the magnitude and angle of the force!",
+                    "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        txtS.setText(null);
+        txtU.setText(null);
+        txtV.setText(null);
+        txtA.setText(null);
+        txtT.setText(null);
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void radDegreesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radDegreesActionPerformed
+        options.setAngle(true);     //to degrees
+        lblAngle.setText("<html>&deg");     //set the label to display degrees sign
+    }//GEN-LAST:event_radDegreesActionPerformed
+
+    private void radRadiansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radRadiansActionPerformed
+        options.setAngle(false);    //to radians
+        lblAngle.setText("rad");     //set the label to display radians sign
+    }//GEN-LAST:event_radRadiansActionPerformed
+
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btCalcualte;
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnCalculate;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClearAll;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnResolveForces;
+    private javax.swing.ButtonGroup btngrpAngle;
     private javax.swing.JCheckBox chkMass;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -677,11 +809,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -689,25 +823,24 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lblAngle;
     private javax.swing.JList lstForces;
     private javax.swing.DefaultListModel list;
     //the following holds forces contained in string 
     //form in list with corresponding indexes
     private java.util.ArrayList<Force> listForces;
     private javax.swing.JPanel pnlForcesResolved;
+    private javax.swing.JRadioButton radDegrees;
+    private javax.swing.JRadioButton radRadians;
     private javax.swing.JTextField txtA;
     private javax.swing.JTextField txtAngle;
     private javax.swing.JLabel txtEq1;
