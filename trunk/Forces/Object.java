@@ -9,7 +9,7 @@ public class Object {
     //force applied to the object; first force is always weight:
     private ArrayList<Force> forces = new ArrayList<Force>();
     //overall resolved forces vertically and horizontally:
-    private Force vertically = new Force(0), horizontally = new Force(0, 90);
+    private Force vertically = new Force(0, 90), horizontally = new Force(0);
 
     //constructors
     public Object(){    //by default mass is 0
@@ -57,8 +57,15 @@ public class Object {
         return horizontally;    //returns the horizontal force resolved
     }
 
+    public void removeForce(Force force){
+        //this function removes the specified force from the list of forces
+        //applied to the object...
+        forces.remove(force);   //remove the object specified
+    }
+
     //the following function will resolve the forces into one (overall)
     public void resolve(){
+        Force vertically = new Force(0, 90), horizontally = new Force(0);
         //find all forces which point north or south with no angle variation
         //and all which point west or east with no angle variation...
         //otherwise deal with the angles and add force to
@@ -191,5 +198,10 @@ public class Object {
                 }
             }
         }
+        //asign the local variables to global ones...
+        this.vertically = vertically;
+        this.horizontally = horizontally;
+        //N/B: this prevents the function adding more to the resolved forces
+        //      variables every time it's called
     }
 }

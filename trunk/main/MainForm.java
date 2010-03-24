@@ -66,6 +66,7 @@ public class MainForm extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         list = new javax.swing.DefaultListModel();
+        listForces = new java.util.ArrayList<Force>();
         lstForces = new javax.swing.JList(list);
         jLabel6 = new javax.swing.JLabel();
         btnRemove = new javax.swing.JButton();
@@ -487,8 +488,11 @@ public class MainForm extends javax.swing.JFrame {
                     javax.swing.JOptionPane.WARNING_MESSAGE);
         }
         else{
+            //remove the selected force from the object
+            object.removeForce(listForces.get(selected));
             //remove the item from the list according to selected index
             list.remove(selected);
+            
             if(list.isEmpty()){     //check if the list is empty
                 //if it is then disable the resolve forces button
                 btnResolveForces.setEnabled(false);
@@ -565,9 +569,10 @@ public class MainForm extends javax.swing.JFrame {
         double angle = Double.parseDouble(txtAngle.getText());
         //add the force to the object
         Force force = new Force(magnitude, angle);
-        object.addForces(force);
         //update the list box
-        list.addElement(force.toString());
+        list.addElement(force);     //N/B: seems to automatically invokes toString...
+        //update the list of forces
+        listForces.add(force);
         //clear the entry fields for new entries
         txtAngle.setText("");
         txtMagnitude.setText("");
@@ -626,7 +631,7 @@ public class MainForm extends javax.swing.JFrame {
                    missing_count++;    //values is not set
                 }
 
-                System.out.println(missing_count);
+                
 
                 //check if there are only 2 suvat missing or less
                 if(missing_count <= 2){
@@ -699,6 +704,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JList lstForces;
     private javax.swing.DefaultListModel list;
+    //the following holds forces contained in string 
+    //form in list with corresponding indexes
+    private java.util.ArrayList<Force> listForces;
     private javax.swing.JPanel pnlForcesResolved;
     private javax.swing.JTextField txtA;
     private javax.swing.JTextField txtAngle;

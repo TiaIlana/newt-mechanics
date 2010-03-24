@@ -496,8 +496,8 @@
                   </AccessibilityProperties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JList(list);"/>
-                    <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="list = new javax.swing.DefaultListModel();"/>
-                    <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private javax.swing.DefaultListModel list;"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="list = new javax.swing.DefaultListModel();&#xd;&#xa;listForces = new java.util.ArrayList&lt;Force&gt;();"/>
+                    <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private javax.swing.DefaultListModel list;&#xd;&#xa;//the following holds forces contained in string &#xd;&#xa;//form in list with corresponding indexes&#xd;&#xa;private java.util.ArrayList&lt;Force&gt; listForces;"/>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
                   </AuxValues>
                 </Component>
