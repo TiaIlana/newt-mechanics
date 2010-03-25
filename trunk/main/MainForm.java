@@ -1,8 +1,23 @@
 /*
- * MainForm.java
- *
- * Created on __DATE__, __TIME__
+ Copyright (C) 2010  Levs Ustinovs
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+To contact the author please email to levi.ustinov@gmail.com.
  */
+
 
 package main;
 
@@ -69,7 +84,6 @@ public class MainForm extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         list = new javax.swing.DefaultListModel();
-        listForces = new java.util.ArrayList<Force>();
         lstForces = new javax.swing.JList(list);
         jLabel6 = new javax.swing.JLabel();
         btnRemove = new javax.swing.JButton();
@@ -85,10 +99,10 @@ public class MainForm extends javax.swing.JFrame {
         txtMass = new javax.swing.JTextField();
         pnlForcesResolved = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
-        txtHorResolved = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        txtVerResolved = new javax.swing.JTextField();
         btnResolveForces = new javax.swing.JButton();
+        txtVector = new javax.swing.JTextField();
+        txtOverallForce = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
@@ -356,9 +370,9 @@ public class MainForm extends javax.swing.JFrame {
 
         pnlForcesResolved.setBorder(javax.swing.BorderFactory.createTitledBorder("Resolved forces"));
 
-        jLabel19.setText("Horizontally:");
+        jLabel19.setText("Resultant force:");
 
-        jLabel20.setText("Vertically:");
+        jLabel20.setText("In vector form:");
 
         btnResolveForces.setText("Resolve forces");
         btnResolveForces.setEnabled(false);
@@ -375,30 +389,29 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(pnlForcesResolvedLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlForcesResolvedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlForcesResolvedLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(txtVerResolved, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlForcesResolvedLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(txtHorResolved, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel19)
+                    .addComponent(btnResolveForces)
                     .addComponent(jLabel20)
-                    .addComponent(btnResolveForces))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(pnlForcesResolvedLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(pnlForcesResolvedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtOverallForce, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtVector, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlForcesResolvedLayout.setVerticalGroup(
             pnlForcesResolvedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlForcesResolvedLayout.createSequentialGroup()
                 .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtHorResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtOverallForce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel20)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtVerResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(txtVector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(btnResolveForces)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jLabel16.setText("kg");
@@ -442,7 +455,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jLabel14)))
                 .addGap(18, 18, 18)
                 .addComponent(pnlForcesResolved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -450,10 +463,10 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlForcesResolved, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlForcesResolved, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(chkMass)
                             .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -562,7 +575,7 @@ public class MainForm extends javax.swing.JFrame {
         }
         else{
             //remove the selected force from the object
-            object.removeForce(listForces.get(selected));
+            object.removeForce(selected);
             //remove the item from the list according to selected index
             list.remove(selected);
             
@@ -580,18 +593,19 @@ public class MainForm extends javax.swing.JFrame {
                 "Are you sure you want to delere all forces?",
                 "Confirm deletion",
                 javax.swing.JOptionPane.YES_NO_OPTION);
-        //if 'Yes' is selcted confirm is 1
-        if(confirm == 1){
+        //if 'Yes' is selected confirm is 0 (the first option)
+        if(confirm == 0){
             //clear all the elements in the list
             list.removeAllElements();
-            //clear all forces from list array of forces
-            listForces.clear();
             //update lstForces
             lstForces.setModel(list);
             //clear all the forces applied to the object
-            object.clearAllForce();
+            object.clearAllForces();
             //disable the resolve button
             btnResolveForces.setEnabled(false);
+            //remove all values from the resolved forces pane:
+            txtVector.setText("");
+            txtOverallForce.setText("");
         }
     }//GEN-LAST:event_btnClearAllActionPerformed
 
@@ -623,9 +637,13 @@ public class MainForm extends javax.swing.JFrame {
 
         object.resolve();   //resolve the forces
 
-        //display them...
-        txtHorResolved.setText(object.getHorizontally().toString(options.getAngle()));
-        txtVerResolved.setText(object.getVertically().toString(options.getAngle()));
+        //display resultant force in force format:
+        txtOverallForce.setText(object.getOverall().toString(options.getAngle()));
+        //and in vector format: (rounding off to 3 decimal places
+        java.text.DecimalFormat format = new java.text.DecimalFormat("###.###");
+        txtVector.setText(format.format(object.getI())+"i " +
+                format.format(object.getJ())+"j");
+        
     }//GEN-LAST:event_btnResolveForcesActionPerformed
 
     private void txtMassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMassKeyTyped
@@ -756,8 +774,8 @@ public class MainForm extends javax.swing.JFrame {
             Force force = new Force(magnitude, angle, options.getAngle());    //for entered force
             //update the list box (angle is set according to option)
             list.addElement(force.toString());
-            //update the list of forces
-            listForces.add(force);
+            //update the list of forces applied to the object
+            object.addForces(force);
             //clear the entry fields for new entries
             txtAngle.setText("");
             txtMagnitude.setText("");
@@ -835,9 +853,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblAngle;
     private javax.swing.JList lstForces;
     private javax.swing.DefaultListModel list;
-    //the following holds forces contained in string 
-    //form in list with corresponding indexes
-    private java.util.ArrayList<Force> listForces;
     private javax.swing.JPanel pnlForcesResolved;
     private javax.swing.JRadioButton radDegrees;
     private javax.swing.JRadioButton radRadians;
@@ -845,14 +860,14 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtAngle;
     private javax.swing.JLabel txtEq1;
     private javax.swing.JLabel txtEq2;
-    private javax.swing.JTextField txtHorResolved;
     private javax.swing.JTextField txtMagnitude;
     private javax.swing.JTextField txtMass;
+    private javax.swing.JTextField txtOverallForce;
     private javax.swing.JTextField txtS;
     private javax.swing.JTextField txtT;
     private javax.swing.JTextField txtU;
     private javax.swing.JTextField txtV;
-    private javax.swing.JTextField txtVerResolved;
+    private javax.swing.JTextField txtVector;
     // End of variables declaration//GEN-END:variables
 
 }

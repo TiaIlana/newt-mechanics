@@ -1,7 +1,26 @@
+/*
+ Copyright (C) 2010  Levs Ustinovs
 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+To contact the author please email to levi.ustinov@gmail.com.
+ */
 
 package Forces;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 
 public class Force {
@@ -73,50 +92,53 @@ public class Force {
 
     //overiding toString method!
     //toString returns the string representation of this object
+    @Override
     public String toString(){
-        //prepare number formating
-        DecimalFormat format = new DecimalFormat("###.###");
+        //prepare magnitude and angle for formating (to 3 decimal places)
+        java.math.MathContext mc = new 
+                java.math.MathContext(3, java.math.RoundingMode.DOWN);
+        java.math.BigDecimal magn = new java.math.BigDecimal(magnitude, mc);
+        java.math.BigDecimal angle = new java.math.BigDecimal(this.angle, mc);
         //check if angle in degree or radiance
         if (angleF){ //true represents degrees
-            return (format.format(magnitude)+"N "
-                    +format.format(this.angle)+"\u00B0");
+            return (magn.toPlainString()+"N "+angle.toPlainString()+"\u00B0");
         }
         else{   //it will be false, thus radians
-            return (format.format(magnitude)+"N "
-                    +format.format(this.angle)+"rad");
+            return (magn.toPlainString()+"N "+angle.toPlainString()+"rad");
         }
     }
     //the following method is same as above, except the paramater
     //defines which format to return the angle in (in the string)
     //(a forced formating option)
     public String toString(boolean angleF){
-        //prepare number formating
-        DecimalFormat format = new DecimalFormat("###.###");
+        //prepare magnitude and angle for formating (to 3 decimal places)
+        java.math.MathContext mc = new
+                java.math.MathContext(3, java.math.RoundingMode.DOWN);
+        java.math.BigDecimal magn = new java.math.BigDecimal(magnitude, mc);
+        java.math.BigDecimal angle = new java.math.BigDecimal(this.angle, mc);
         if (this.angleF){ //true represents degrees (force's angle)
-            if(angleF){ //force's angle is in degrees, degrees were requested
+            if(angleF){ //force's angle is in degrees, degrees were requested...
                 //thus return as is
-                return (format.format(magnitude)+"N "+
-                    format.format(this.angle)+"\u00B0");
+                return (magn.toPlainString()+"N "
+                        +angle.toPlainString()+"\u00B0");
             }
             else{   //force's angle is in degree, radians were requested
                 //thus return converting angle into radians...
-                return (format.format(magnitude)+"N "+
-                    format.format(Math.toRadians(this.angle))
-                    +"rad");
+                angle= new java.math.BigDecimal(Math.toRadians(this.angle), mc);
+                return (magn.toPlainString()+"N "+angle.toPlainString()+"rad");
             }
                 
         }
         else{   //it will be false, thus radians    (force's angle)
             if(angleF){ //force's angle is in radians, degrees were requested
                 //thus convert to degrees
-                return (format.format(magnitude)+"N "+
-                    format.format(Math.toDegrees(this.angle))
-                    +"\u00B0");
+                angle= new java.math.BigDecimal(Math.toDegrees(this.angle), mc);
+                return (magn.toPlainString()+"N "
+                        +angle.toPlainString()+"\u00B0");
             }
             else{   //force's angle is in radians, radians were requested
                 //return as is
-                return (format.format((magnitude))+"N "+
-                    format.format((this.angle))+"rad");
+                return (magn.toPlainString()+"N "+angle.toPlainString()+"rad");
             }
         }
     }

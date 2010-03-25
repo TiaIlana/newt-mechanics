@@ -1,3 +1,22 @@
+/*
+ Copyright (C) 2010  Levs Ustinovs
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+To contact the author please email to levi.ustinov@gmail.com.
+ */
 
 package Forces;
 
@@ -8,8 +27,9 @@ public class Object {
     private double mass;  //mass in kilograms
     //force applied to the object; first force is always weight:
     private ArrayList<Force> forces = new ArrayList<Force>();
-    //overall resolved forces vertically and horizontally:
-    private Force vertically = new Force(0, 90), horizontally = new Force(0);
+    //resolved forces vertically, horizontally and overall:
+    private Force vertically = new Force(0, 90), horizontally = new Force(0),
+            overall = new Force(0);
 
     //constructors
     public Object(){    //by default mass is 0
@@ -44,17 +64,24 @@ public class Object {
         this.mass = mass;
     }
 
-    public void clearAllForce(){
+    public void clearAllForces(){
         //clears all forces
         forces.clear();
+        //back to defaults:
+        vertically = new Force(0, 90);
+        horizontally = new Force(0);
+        overall = new Force(0);
     }
 
     //retriever functions
-    public Force getVertically(){   //returns the vertical force resolved
-        return vertically;
+    public double getJ(){   //returns the resolved vertical force's magnitude
+        return vertically.getMagnitude();
     }
-    public Force getHorizontally(){
-        return horizontally;    //returns the horizontal force resolved
+    public double getI(){   //returns the resolved horizontal force's magnitude
+        return horizontally.getMagnitude();
+    }
+    public Force getOverall(){  //return the overall force
+        return overall;
     }
 
     public void removeForce(Force force){
@@ -62,149 +89,55 @@ public class Object {
         //applied to the object...
         forces.remove(force);   //remove the object specified
     }
+    public void removeForce(int index){
+        //this function removes a force by the specified index
+        forces.remove(index);
+    }
 
-    //the following function will resolve the forces into one (overall)
+    //the following function will resolve the forces into 3 (vertically,
+    //gorizontally and overall)
     public void resolve(){
-        Force vertically = new Force(0, 90), horizontally = new Force(0);
+        //stores the angle and magnitude of the current force:
+        double angle, magn;
+        //stores the overall i and j vector components
+        double iOverall = 0 , jOverall = 0;
+        
+        //resolve each force into i and j vector components
+        for(int index = 0; index < forces.size(); index++){
+            //check if magnitude is 0, if it is move on to the next force
+            //(if magnitude of the force is 0, it has no effect)
+            if(forces.get(index).getMagnitude() == 0) continue;
+            angle = forces.get(index).getAngle();
+            magn = forces.get(index).getMagnitude();
 
-        //find all forces which point north or south with no angle variation
-        //and all which point west or east with no angle variation...
-        //otherwise deal with the angles and add force to
-        //the horizontall and verticall overall forces
-        for(int i = 0; i < forces.size(); i++){
-            double magn;    //temporarry storage for magnitude
-            Force forceCurrent = forces.get(i);
-            //north
-            if(forceCurrent.getAngle() == 90){
-                magn = vertically.getMagnitude();   //find the current overall magnitude
-                magn += forceCurrent.getMagnitude();   //add on the current force's magnitude
-                vertically.setMagnitude(magn);      //set the overall magnitude
-            }
-            //south
-            else if(forceCurrent.getAngle() == 270){
-                //find the current overall magnitude
-                magn = vertically.getMagnitude();
-                //deduct the current force's mangitude (since it is pointing the other way)
-                magn -= (forceCurrent.getMagnitude());
-                vertically.setMagnitude(magn);      //set the overall magnitude
-            }
-            //east
-            else if(forceCurrent.getAngle() == 0 ){
-                //find the current overall magnitude
-                magn = vertically.getMagnitude();
-                //add the current force's mangitude
-                magn += (forceCurrent.getMagnitude());
-                vertically.setMagnitude(magn);      //set the overall magnitude
-            }
-            //west
-            else if(forceCurrent.getAngle() == 180){
-                //find the current overall magnitude
-                magn = vertically.getMagnitude();
-                //deduct the current force's mangitude (since it is pointing the other way)
-                magn -= (forceCurrent.getMagnitude());
-                vertically.setMagnitude(magn);      //set the overall magnitude
-            }
-            //otherwise deal with the angles
-            else{
-                double angle = forceCurrent.getAngle();    //the angle
-                double magnitude = forceCurrent.getMagnitude();    //the magnitude of the force
+            double i, j;    //stores i and j components of current force
 
-                //the angle is stored in degrees, since all trig functions
-                //in the class java.lang.Math are performed in radians,
-                //the angle must be first converted to radians and then
-                //back to degrees to be multiplied by the magnitude of the force...
-                //the following 'if' check what format the angle is and converts
-                //if nessecary:
-                if(forceCurrent.getAngleFormat())   angle = Math.toRadians(angle);  //angle is in degrees
+            //java.Math performs triginometric calculations in radians.
+            //thus check if angle is in degrees and if it is convert
+            //it to radians (and change the local angle format
+            //setting to be safe)
+            if(forces.get(index).getAngleFormat() == true)
+                angle = Math.toRadians(angle);  //convert to radians
 
+            //find i (horizontall component)
+            i = (magn*Math.cos(angle));
+            //find j (verticall component)
+            j = (magn*Math.sin(angle));
 
-                //there are for quadrants on the j and i axies relative to the object:
-                //      ^ +
-                //      |
-                //  2   |   1
-                //<--------------> +
-                //  3   |   4
-                //      |
-                //
-                //the following 'else-if' evaluetaes which quadrant the
-                //force is acting in...
-                
-                //first quadrant:
-                if(forceCurrent.getAngle() > 0 && forceCurrent.getAngle() < 90){
-                    //find the current horizontal, overall magnitude
-                    magn = horizontally.getMagnitude();
-                    //resolve horizontally (magntide of force * Cos(angle))
-                    magn += (magnitude*Math.toDegrees(Math.cos(angle)));
-                    horizontally.setMagnitude(magn); //set the overall magnitude
-
-                    //find the current vertical, overall magnitude
-                    magn = vertically.getMagnitude();
-                    //resolve vertically (magntide of force * Sin(angle))
-                    magn += (magnitude*Math.toDegrees(Math.sin(angle)));
-                    vertically.setMagnitude(magn); //set the overall magnitude
-
-                }
-                //second quadrant:
-                else if(forceCurrent.getAngle() > 90 && forceCurrent.getAngle() < 180){
-                    //same thing as for first quadrant, except we are deducting
-                    //from the overall horizontal force and not adding...
-
-                    //find the current horizontal, overall magnitude
-                    magn = horizontally.getMagnitude();
-                    //resolve horizontally (magntide of force * Cos(angle))
-                    magn -= (magnitude*Math.toDegrees(Math.cos(angle)));
-                    horizontally.setMagnitude(magn); //set the overall magnitude
-
-                    //find the current vertical, overall magnitude
-                    magn = vertically.getMagnitude();
-                    //resolve vertically (magntide of force * Sin(angle))
-                    magn += (magnitude*Math.toDegrees(Math.sin(angle)));
-                    vertically.setMagnitude(magn); //set the overall magnitude
-
-                }
-                //third quadrant:
-                else if(forceCurrent.getAngle() > 180 && forceCurrent.getAngle() < 270){
-                    //same thing as for thrid quadrant, except we are deducting
-                    //from the overall horizontal and vertical
-                    //force and not adding to any...
-
-                    //find the current horizontal, overall magnitude
-                    magn = horizontally.getMagnitude();
-                    //resolve horizontally (magntide of force * Cos(angle))
-                    magn -= (magnitude*Math.toDegrees(Math.cos(angle)));
-                    horizontally.setMagnitude(magn); //set the overall magnitude
-
-                    //find the current vertical, overall magnitude
-                    magn = vertically.getMagnitude();
-                    //resolve vertically (magntide of force * Sin(angle))
-                    magn -= (magnitude*Math.toDegrees(Math.sin(angle)));
-                    vertically.setMagnitude(magn); //set the overall magnitude
-
-                }
-                //fourth quadrant:
-                else{
-                    //same thing as for fourth quadrant, except we are now
-                    //adding to the horizontal overall magnitude...
-
-                    //find the current horizontal, overall magnitude
-                    magn = horizontally.getMagnitude();
-                    //resolve horizontally (magntide of force * Cos(angle))
-                    magn += (magnitude*Math.toDegrees(Math.cos(angle)));
-                    horizontally.setMagnitude(magn); //set the overall magnitude
-
-                    //find the current vertical, overall magnitude
-                    magn = vertically.getMagnitude();
-                    //resolve vertically (magntide of force * Sin(angle))
-                    magn -= (magnitude*Math.toDegrees(Math.sin(angle)));
-                    vertically.setMagnitude(magn); //set the overall magnitude
-                    
-                }
-            }
+            //add i and j to the over all values
+            iOverall += i;
+            jOverall += j;
         }
-        //asign the local variables to global ones...
-        this.vertically = vertically;
-        this.horizontally = horizontally;
-        //N/B: this prevents the function adding more to the resolved forces
-        //      variables every time it's called
+
+        //set the overall horrizontall magnitude (i) and verticall magnitude (j)
+        horizontally.setMagnitude(iOverall);
+        vertically.setMagnitude(jOverall);
+
+        //  Calculate the overall force using the overall i and j components:
+        //using Pythagora's Theorem (to find magnitude):
+        overall.setMagnitude(Math.sqrt(jOverall*jOverall+iOverall*iOverall));
+        //Also: (tah(theta)=j/i) (overall's angle is in degrees!)
+        overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
     }
 }
+
