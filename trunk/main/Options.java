@@ -23,18 +23,27 @@ package main;
 
 public class Options {
     private boolean angle;  //tue - degrees, false - radians
+    private boolean gravity;    //true - set, false - not set
 
     public Options(){
         //by default angle is set to degrees
         angle = true;
+        //and gravity to true
+        gravity = true;
     }
 
     public void setAngle(boolean angle){
         if(angle) this.angle = true;    //to degrees
         else this.angle = false;        //to radians
     }
-
     public boolean getAngle(){
         return angle;
+    }
+
+    public void setGravity(boolean gravity){
+        this.gravity = gravity;
+    }
+    public boolean getGravity(){
+        return this.gravity;
     }
 }
