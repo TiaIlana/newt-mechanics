@@ -28,15 +28,15 @@ public class Object {
     //force applied to the object; first force is always weight:
     private ArrayList<Force> forces = new ArrayList<Force>();
     //resolved forces vertically, horizontally and overall:
-    private Force vertically = new Force(0, 90), horizontally = new Force(0),
-            overall = new Force(0);
+    private Force vertically = new Force(0, 90);
+    private Force horizontally = new Force(0);
+    private Force overall = new Force(0);
     private double friction;    //stores value of friction of the object/surface
-    private boolean frictionF;  //flag for set and not set firction
+    private boolean frictionF = false;  //flag for set and not set firction
 
     //constructors
     public Object(){    
         this.mass = 0;  //by default mass is 0
-        this.frictionF = false; //and there is no firction
     }
     public Object(double mass){
         this.mass = mass;   //asign mass
@@ -55,33 +55,6 @@ public class Object {
         addForces(forces);
     }
 
-    public void addForces(Force... forces){
-        //NOTE: the parameter can be a single force...
-        //add the list of new forces provided
-        for(int i=0; i < forces.length; i++){
-            this.forces.add(forces[i]);   //first force is always weight
-        }
-    }
-
-    public void setMass(double mass){
-        //set's the mass of the object
-        this.mass = mass;
-        //add the cancelling out forces produced by gravity*mass: (action+reaction=0)
-        Force force = new Force(g*mass, 270);   //temporrary
-        this.forces.add(force);  //F=ma; 270 degrees is acting north
-        force = new Force((-g)*mass, 270);    //reaction force; reusing temp variables
-        this.forces.add(force);
-    }
-
-    public void clearAllForces(){
-        //clears all forces
-        forces.clear();
-        //back to defaults:
-        vertically = new Force(0, 90);
-        horizontally = new Force(0);
-        overall = new Force(0);
-    }
-
     //retriever functions
     public double getJ(){   //returns the resolved vertical force's magnitude
         return vertically.getMagnitude();
@@ -92,7 +65,21 @@ public class Object {
     public Force getOverall(){  //return the overall force
         return overall;
     }
+    public double getFriction(){
+        //return the friction if set
+        if(frictionF) return this.friction;
+        //and if not a negative value
+        else return -1;
+    }
+    public int numForces(){ //returns the number of forces applied
+        return forces.size();
+    }
+    public Force getForce(int i){   //returns a force by it's index
+        return forces.get(i);
+    }
 
+
+    //remover functions
     public void removeForce(Force force){
         //this function removes the specified force from the list of forces
         //applied to the object...
@@ -102,30 +89,45 @@ public class Object {
         //this function removes a force by the specified index
         forces.remove(index);
     }
-
-    public void setFriction(double friction){
-        //set the friction
-        this.friction = friction;
-        frictionF = true;
+    public void clearAllForces(){
+        //clears all forces
+        forces.clear();
+        //back to defaults:
+        vertically = new Force(0, 90);
+        horizontally = new Force(0);
+        overall = new Force(0);
     }
     public void clearFriction(){
         //simply turn off the flag
         frictionF = false;
     }
-    public double getFriction(){
-        //return the friction if set
-        if(frictionF) return this.friction;
-        //and if not a negative value
-        else return -1;
+    
+    //setter functions
+    public void setFriction(double friction){
+        //set the friction
+        this.friction = friction;
+        frictionF = true;
+    }
+    public void setMass(double mass){
+        //set's the mass of the object
+        this.mass = mass;
+        //add the cancelling out forces produced by gravity*mass: (action+reaction=0)
+        Force force = new Force(g*mass, 270);   //temporrary
+        this.forces.add(force);  //F=ma; 270 degrees is acting north
+        force = new Force((-g)*mass, 270);    //reaction force; reusing temp variables
+        this.forces.add(force);
+    }
+    public void addForces(Force... forces){
+        //NOTE: the parameter can be a single force...
+        //add the list of new forces provided
+        for(int i=0; i < forces.length; i++){
+            this.forces.add(forces[i]);   //first force is always weight
+        }
     }
 
     //the following function will resolve the forces into 3 (vertically,
     //gorizontally and overall)
     public void resolve(){
-        //before resolving, check if mass is set
-        //if it is, convert it to a force (in conjuction with gravity)
-        this.addForces(new Force(g*mass,270));
-
         //stores the angle and magnitude of the current force:
         double angle, magn;
         //stores the overall i and j vector components
@@ -138,6 +140,11 @@ public class Object {
             if(forces.get(index).getMagnitude() == 0) continue;
             angle = forces.get(index).getAngle();
             magn = forces.get(index).getMagnitude();
+
+            //check if the angle is 0...
+            //if it is, the force is simply acting to the right of the i
+            //component or simply directly to the right:
+            if(angle==0) iOverall += magn;
 
             double i, j;    //stores i and j components of current force
 
@@ -182,4 +189,3 @@ public class Object {
         overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
     }
 }
-

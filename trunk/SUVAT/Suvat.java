@@ -180,7 +180,7 @@ public class Suvat {
 	
 	
 	
-	static int findInArray(char array[], char f){
+	private static int findInArray(char array[], char f){
 		//this simply finds a char in the array and returns it's index
 		for(int i = 0; i < array.length; i++){
 			if(array[i]==f) return i;
@@ -188,7 +188,7 @@ public class Suvat {
 		return (array.length+1);	//this should never be reached!
 	}
 
-	static class Equations {
+	private static class Equations {
 		// Documentation for this class is provided at the end of the file (in the comments)
 		static class S {
 			static double uvt(double uvt[]){

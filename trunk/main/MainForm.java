@@ -24,8 +24,11 @@ package main;
 import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
 import Forces.Force;
-
+import graphics.Line;
 import javax.swing.UIManager;
+import java.awt.*;
+import java.awt.geom.*;
+
 
 /**
  *
@@ -113,7 +116,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
-        canvas = new java.awt.Canvas();
+        canvas = new CustomCanvas();
         jMenuBar1 = new javax.swing.JMenuBar();
         menufFile = new javax.swing.JMenu();
         menuItemSave = new javax.swing.JMenuItem();
@@ -206,6 +209,11 @@ public class MainForm extends javax.swing.JFrame {
 
         btnFindAcc.setText("Find A");
         btnFindAcc.setEnabled(false);
+        btnFindAcc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindAccActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -673,6 +681,9 @@ public class MainForm extends javax.swing.JFrame {
                 //if it is then disable the resolve forces button
                 btnResolveForces.setEnabled(false);
             }
+
+            //update canvas:
+            canvas.repaint();
         }
 
     }//GEN-LAST:event_btnRemoveActionPerformed
@@ -878,6 +889,9 @@ public class MainForm extends javax.swing.JFrame {
             btnResolveForces.setEnabled(true);
             //set the forcus on the magnitude text box for entering more forces
             txtMagnitude.requestFocus();
+
+            //update the canvas:
+            canvas.repaint();
         }
         else{   //no values for magnitude and angle have bee entered
             javax.swing.JOptionPane.showMessageDialog(null,
@@ -947,8 +961,78 @@ public class MainForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnResetActionPerformed
 
+    private void btnFindAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindAccActionPerformed
+        
+        
+    }//GEN-LAST:event_btnFindAccActionPerformed
 
+    private class CustomCanvas extends Canvas{
+        @Override
+        public void paint(Graphics g){
+            Graphics2D g2 = (Graphics2D) g;
 
+            //turn on antialisaing for smooth graphics:
+            g2.setRenderingHint(RenderingHints .KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+            //define the ground line
+            Line2D.Double ground = new Line2D.Double(0, 300, 400, 300);
+            //g2.setStroke(new BasicStroke(1.5f));
+            //draw the line
+            g2.draw(ground);
+
+            //create particle model:
+            //(NOTE: 259 instead of 260 is used, since antialiasing is on!)
+            Ellipse2D.Double particle =
+                    new Ellipse2D.Double(180, 259, 40, 40);
+            //set the stroke to something thicker
+            g2.setStroke(new BasicStroke(2.5f));
+            //draw the object...
+            g2.draw(particle);
+
+            //define the center of the partice for drawing forces as lines:
+            Point2D center = new Point2D.Double((double)200, (double)279);
+
+            ////draw a line for each force applied ot the object:
+            //set the stroke to something thinner:
+            g2.setStroke(new BasicStroke(1f));
+            //itterate through iach force and draw it:
+            for(int i = 0; i<object.numForces(); i++){
+                Line.draw(g2, center, object.getForce(i), 50);
+            }
+            
+        }
+
+        private void drawForceLine(Graphics2D g2, Point2D center,
+                Force force, double length){
+            //for ease of use:
+            double angle = force.getAngle();
+            boolean angleF = force.getAngleFormat();
+            if(!angleF){    //if the angle is in radians
+                angle = Math.toDegrees(angle);  //conver it to degrees
+            }
+
+            //define coordinate variables:
+            //x,y - intial points, xNew,yNew - new points
+            double x, y, xNew, yNew;
+
+            //set the initial x and y according to legth specfied:
+            x = length;
+            //no change in y, as the initil point is parallel to the center point:
+            y = 0;
+
+            //use the transofrmation formula to find the xNew and yNew:
+            xNew = (Math.cos(angle*Math.PI/180)*x)-(Math.sin(angle*Math.PI/180)*y);
+            yNew = (Math.sin(angle*Math.PI/180)*x)+(Math.cos(angle*Math.PI/180)*y);
+
+            //convert the newly found end point of line to a point
+            //relative to the center:
+            Point2D end = new Point2D.Double(xNew+center.getX(),
+                    center.getY()-yNew);
+            //draw the line!
+            g2.draw(new Line2D.Double(center, end));
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
