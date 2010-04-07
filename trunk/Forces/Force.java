@@ -20,12 +20,15 @@ To contact the author please email to levi.ustinov@gmail.com.
 
 package Forces;
 
+import java.awt.Color;
 
 public class Force {
     //the angle is recorder 0 if it is poiting east at 0 degrees
     private double angle;  //stores the angle of the force (direction)
     private boolean angleF;  //true - degrees, false - radians
     private double magnitude;   //stores the magnitude of the force in newtons
+    //stores the color of the force; used as an identifier:
+    private Color color = new Color(255, 255, 255); //by default it's black
 
     //constructors
     public Force(double magnitude){
@@ -47,16 +50,25 @@ public class Force {
         setAngle(angle);
         this.angleF = angleF;
     }
+    public Force(double magnitude, double angle, boolean angleF, Color color){
+        this.magnitude = magnitude;
+        setAngle(angle);
+        this.angleF = angleF;
+        this.color = color;
+    }
 
     //retriever functions
     public double getAngle(){
         return angle;
     }
-    public boolean getAngleFormat(){    //defrees or radians?
+    public boolean getAngleFormat(){    //degrees or radians?
         return angleF;
     }
     public double getMagnitude(){
         return magnitude;
+    }
+    public Color getColor(){
+        return this.color;
     }
 
     //setter functions

@@ -28,6 +28,7 @@ import graphics.*;
 import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Random;
 
 
 /**
@@ -875,9 +876,18 @@ public class MainForm extends javax.swing.JFrame {
             //retrieve the entered values
             double magnitude = Double.parseDouble(txtMagnitude.getText());
             double angle = Double.parseDouble(txtAngle.getText());
-            Force force = new Force(magnitude, angle, options.getAngle());    //for entered force
-            //update the list box (angle is set according to option)
-            list.addElement(force.toString());
+            Color randColor = getRandomColor(); //to asign a color to the force
+            Force force = new Force(magnitude, angle, options.getAngle(),
+                    randColor);    //for entered force
+
+            //create a html color value:
+            String colorHtml = "#";
+            colorHtml += java.lang.Integer.toHexString(randColor.getRed());
+            colorHtml += java.lang.Integer.toHexString(randColor.getGreen());
+            colorHtml += java.lang.Integer.toHexString(randColor.getBlue());
+            //update the list box (angle is set according to option):
+            list.addElement("<html><font color="+colorHtml+">"+
+                    force.toString()+"</font>");
             //update the list of forces applied to the object
             object.addForces(force);
             //clear the entry fields for new entries
@@ -885,6 +895,8 @@ public class MainForm extends javax.swing.JFrame {
             txtMagnitude.setText("");
             //update the JTable 'lstForces'
             lstForces.setModel(list);
+            
+            
             //enable the calculate forces button
             btnResolveForces.setEnabled(true);
             //set the forcus on the magnitude text box for entering more forces
@@ -966,6 +978,12 @@ public class MainForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnFindAccActionPerformed
 
+    private Color getRandomColor() {    //genretaes random color
+        Random numGen = new Random();
+        return new Color(numGen.nextInt(255),
+                numGen.nextInt(255), numGen.nextInt(255));
+   }
+
     private class CustomCanvas extends Canvas{
         @Override
         public void paint(Graphics g){
@@ -998,6 +1016,8 @@ public class MainForm extends javax.swing.JFrame {
             g2.setStroke(new BasicStroke(1f));
             //itterate through iach force and draw it:
             for(int i = 0; i<object.numForces(); i++){
+                //set the folor for the arrow:
+                g2.setColor(object.getForce(i).getColor());
                 Arrow.draw(g2, center, object.getForce(i), 50, 10);
             }
             
