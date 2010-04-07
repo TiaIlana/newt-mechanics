@@ -24,7 +24,7 @@ package main;
 import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
 import Forces.Force;
-import graphics.Line;
+import graphics.*;
 import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.geom.*;
@@ -998,7 +998,7 @@ public class MainForm extends javax.swing.JFrame {
             g2.setStroke(new BasicStroke(1f));
             //itterate through iach force and draw it:
             for(int i = 0; i<object.numForces(); i++){
-                Line.draw(g2, center, object.getForce(i), 50);
+                Arrow.draw(g2, center, object.getForce(i), 50, 10);
             }
             
         }
