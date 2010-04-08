@@ -177,8 +177,7 @@ public class Suvat {
 		
 		return true;
 	}
-	
-	
+		
 	
 	private static int findInArray(char array[], char f){
 		//this simply finds a char in the array and returns it's index

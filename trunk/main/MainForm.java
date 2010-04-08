@@ -38,6 +38,8 @@ import java.util.Random;
 public class MainForm extends javax.swing.JFrame {
     Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
     Options options = new Options();  //for setting options
+    //for formting
+    java.text.DecimalFormat format = new java.text.DecimalFormat("###.###");
     
 	/** Creates new form MainForm */
     public MainForm() {
@@ -111,16 +113,14 @@ public class MainForm extends javax.swing.JFrame {
         chkGravity = new javax.swing.JCheckBox();
         jLabel15 = new javax.swing.JLabel();
         chkFriction = new javax.swing.JCheckBox();
-        ftxtFriction = new javax.swing.JFormattedTextField();
         txtMass = new javax.swing.JTextField();
         chkMass = new javax.swing.JCheckBox();
         jLabel16 = new javax.swing.JLabel();
-        btnSave = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
+        txtFriction = new javax.swing.JTextField();
         canvas = new CustomCanvas();
         jMenuBar1 = new javax.swing.JMenuBar();
         menufFile = new javax.swing.JMenu();
-        menuItemSave = new javax.swing.JMenuItem();
         menuItemExit = new javax.swing.JMenuItem();
         menuEdit = new javax.swing.JMenu();
         menuItemClearAll = new javax.swing.JMenuItem();
@@ -232,26 +232,26 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtT, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtA, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtV, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtU, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtS, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel8)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                            .addComponent(txtA, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                            .addComponent(txtV, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                            .addComponent(txtU, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                            .addComponent(txtS, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)))
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCalculate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(btnClear, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(btnFindAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnFindAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCalculate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -477,9 +477,19 @@ public class MainForm extends javax.swing.JFrame {
         btngrpAngle.add(radDegrees);
         radDegrees.setSelected(true);
         radDegrees.setText("Degrees");
+        radDegrees.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radDegreesActionPerformed(evt);
+            }
+        });
 
         btngrpAngle.add(radRadians);
         radRadians.setText("Radians");
+        radRadians.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radRadiansActionPerformed(evt);
+            }
+        });
 
         chkGravity.setSelected(true);
         chkGravity.setText("Gravity");
@@ -492,9 +502,6 @@ public class MainForm extends javax.swing.JFrame {
                 chkFrictionActionPerformed(evt);
             }
         });
-
-        ftxtFriction.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        ftxtFriction.setEnabled(false);
 
         txtMass.setEnabled(false);
         txtMass.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -512,13 +519,6 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel16.setText("kg");
 
-        btnSave.setText("Save");
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
         btnReset.setText("Reset to defaluts");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -526,43 +526,39 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        txtFriction.setEnabled(false);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(10, 10, 10)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(chkGravity)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(chkFriction)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ftxtFriction, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jLabel21)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(radDegrees)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(radRadians))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(chkMass)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel16))))
-                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(btnSave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReset)))
-                .addContainerGap(27, Short.MAX_VALUE))
+                                .addComponent(chkGravity)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(chkFriction)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFriction, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(radDegrees)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(radRadians))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(chkMass)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16))
+                            .addComponent(btnReset)))
+                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -578,16 +574,14 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkGravity)
                     .addComponent(chkFriction)
-                    .addComponent(ftxtFriction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFriction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkMass)
                     .addComponent(txtMass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnReset))
+                .addComponent(btnReset)
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -597,12 +591,13 @@ public class MainForm extends javax.swing.JFrame {
 
         menufFile.setText("File");
 
-        menuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemSave.setText("Save");
-        menufFile.add(menuItemSave);
-
         menuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         menuItemExit.setText("Exit");
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemExitActionPerformed(evt);
+            }
+        });
         menufFile.add(menuItemExit);
 
         jMenuBar1.add(menufFile);
@@ -611,6 +606,11 @@ public class MainForm extends javax.swing.JFrame {
 
         menuItemClearAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         menuItemClearAll.setText("Clear All");
+        menuItemClearAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemClearAllActionPerformed(evt);
+            }
+        });
         menuEdit.add(menuItemClearAll);
 
         jMenuBar1.add(menuEdit);
@@ -622,6 +622,11 @@ public class MainForm extends javax.swing.JFrame {
         menuHelp.add(menuItemHelp);
 
         menuItemAbout.setText("About");
+        menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAboutActionPerformed(evt);
+            }
+        });
         menuHelp.add(menuItemAbout);
 
         jMenuBar1.add(menuHelp);
@@ -634,13 +639,13 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(2, 2, 2)
                 .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -654,8 +659,8 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -709,6 +714,8 @@ public class MainForm extends javax.swing.JFrame {
             txtVector.setText("");
             txtOverallForce.setText("");
         }
+        //repaint graphics
+        canvas.repaint();
     }//GEN-LAST:event_btnClearAllActionPerformed
 
     private void chkMassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkMassActionPerformed
@@ -717,8 +724,6 @@ public class MainForm extends javax.swing.JFrame {
         }
         else{   //if unckeched
             txtMass.setEnabled(false);  //disable it
-              //disable reolving forces if there are none in the list...
-            if(list.isEmpty()) btnResolveForces.setEnabled(false);
         }
     }//GEN-LAST:event_chkMassActionPerformed
 
@@ -727,17 +732,45 @@ public class MainForm extends javax.swing.JFrame {
         if(!txtMass.getText().isEmpty()){  //if txtMass is not empty
             //check if gravity is set...
             if(options.getGravity()){
-                object.setMass(Double.parseDouble(txtMass.getText()));  //set mass
+                try{    //set mass
+                    object.setMass(Double.parseDouble(txtMass.getText()));
+                }
+                catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for mass!", "Error",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
             }
             //otherwise mass does nothing, since there is no gravity
         }
         //if mass check box is set, but txtMass contains no value
         //notify user and disable button...
-        if(txtMass.getText().isEmpty() && chkMass.isSelected()){
+        else if(txtMass.getText().isEmpty() && chkMass.isSelected()){
             javax.swing.JOptionPane.showMessageDialog(null, //user notification
                     "Please set mass or uncheck the mass check box!", "Error",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
             btnResolveForces.setEnabled(false);
+            return;
+        }
+
+        //check for friction and add it to the object if it is
+        if(!txtFriction.getText().isEmpty()){   //it isn't empty
+            //set the friction:
+            try{
+                object.setFriction(Double.parseDouble(txtFriction.getText()));
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for friction!", "Error",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        else if(txtFriction.getText().isEmpty() && chkFriction.isSelected()){
+            javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please set friction or uncheck the friction check box!",
+                    "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -746,7 +779,6 @@ public class MainForm extends javax.swing.JFrame {
         //display resultant force in force format:
         txtOverallForce.setText(object.getOverall().toString(options.getAngle()));
         //and in vector format: (rounding off to 3 decimal places
-        java.text.DecimalFormat format = new java.text.DecimalFormat("###.###");
         txtVector.setText(format.format(object.getI())+"i " +
                 format.format(object.getJ())+"j");
     }//GEN-LAST:event_btnResolveForcesActionPerformed
@@ -804,36 +836,76 @@ public class MainForm extends javax.swing.JFrame {
         int missing_count = 0;  //counter for unset values
         //build the two arrays
         if (!txtS.getText().isEmpty()) {
+            try{
                 values[0] = Double.parseDouble(txtS.getText());
-                flags[0] = true;
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for 'S' (distance)!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            flags[0] = true;
         }
         else{
            missing_count++;    //values is not set
         }
         if (!txtU.getText().isEmpty()) {
+            try{
                 values[1] = Double.parseDouble(txtU.getText());
-                flags[1] = true;
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for 'U' (initial velocity)!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            flags[1] = true;
         }
         else{
            missing_count++;    //values is not set
         }
         if ((!txtV.getText().isEmpty())) {
+            try{
                 values[2] = Double.parseDouble(txtV.getText());
-                flags[2] = true;
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for 'V' (final velocity)!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            flags[2] = true;
         }
         else{
            missing_count++;    //values is not set
         }
         if ((!txtA.getText().isEmpty())) {
+            try{
                 values[3] = Double.parseDouble(txtA.getText());
-                flags[3] = true;
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for 'A' (acceleration)!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            flags[3] = true;
         }
         else{
            missing_count++;    //values is not set
         }
         if ((!txtT.getText().isEmpty())) {
+            try{
                 values[4] = Double.parseDouble(txtT.getText());
-                flags[4] = true;
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for 'T' (time)!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            flags[4] = true;
         }
         else{
            missing_count++;    //values is not set
@@ -856,11 +928,11 @@ public class MainForm extends javax.swing.JFrame {
                     values[i] = newValues[i].val; //update the value
             }
             //update on screen values
-            txtS.setText(Double.toString(values[0]));
-            txtU.setText(Double.toString(values[1]));
-            txtV.setText(Double.toString(values[2]));
-            txtA.setText(Double.toString(values[3]));
-            txtT.setText(Double.toString(values[4]));
+            txtS.setText(format.format(values[0]));
+            txtU.setText(format.format(values[1]));
+            txtV.setText(format.format(values[2]));
+            txtA.setText(format.format(values[3]));
+            txtT.setText(format.format(values[4]));
         }
         else{   //less than 3 variables entered
             javax.swing.JOptionPane.showMessageDialog(null,
@@ -873,9 +945,27 @@ public class MainForm extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         //check if angle and magnitude have been entered
         if(!txtAngle.getText().isEmpty() && !txtMagnitude.getText().isEmpty()){
+            double magnitude;
+            double angle;
             //retrieve the entered values
-            double magnitude = Double.parseDouble(txtMagnitude.getText());
-            double angle = Double.parseDouble(txtAngle.getText());
+            try{
+                angle = Double.parseDouble(txtAngle.getText());
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for the angle of the force!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            try{
+                magnitude = Double.parseDouble(txtMagnitude.getText());
+            }
+            catch(NumberFormatException exc){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please enter a valid value for the magnitude of the force!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             Color randColor = getRandomColor(); //to asign a color to the force
             Force force = new Force(magnitude, angle, options.getAngle(),
                     randColor);    //for entered force
@@ -922,40 +1012,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void chkFrictionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkFrictionActionPerformed
         //enable text entering field acording to the check box status:
-        ftxtFriction.setEnabled(chkFriction.isSelected());
+        txtFriction.setEnabled(chkFriction.isSelected());
     }//GEN-LAST:event_chkFrictionActionPerformed
-
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        ////degrees setting:
-        if(radDegrees.isSelected()){    //degree are selected
-            options.setAngle(true);     //set the options
-            //correct the label to display the degres sign:
-            lblAngle.setText("<html>&deg");
-        }
-        else{   //radians are set...
-            options.setAngle(false);
-            lblAngle.setText("rad");    //display the radians 'sign'
-        }
-
-        ////gravity setting:
-        //change options according to selection:
-        options.setGravity(chkGravity.isSelected());
-
-        ////friction setting:
-        //debug:
-        try{
-            ftxtFriction.commitEdit();
-        }
-        catch(java.text.ParseException exc){
-            System.out.println("Please enter a valid value for friction!" +
-                    "\nFriction was not saved!");
-        }
-        double lol = ((Double)ftxtFriction.getValue()).doubleValue();
-        System.out.println(lol);
-
-        ////mass setting:
-        object.setMass(Double.parseDouble(txtMass.getText()));  //get the mass
-    }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         //simply reinitialise the Options object:
@@ -977,6 +1035,35 @@ public class MainForm extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btnFindAccActionPerformed
+
+    private void radDegreesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radDegreesActionPerformed
+        //set the options to degress if they are selected:
+        if(radDegrees.isSelected()) options.setAngle(true);
+    }//GEN-LAST:event_radDegreesActionPerformed
+
+    private void radRadiansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radRadiansActionPerformed
+        //set the options to radians if they are selected:
+        if(radRadians.isSelected()) options.setAngle(false);
+    }//GEN-LAST:event_radRadiansActionPerformed
+
+    private void menuItemClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemClearAllActionPerformed
+        //initiate all of the reset and clear buttons...
+        btnClearAll.doClick();
+        btnClear.doClick();
+        btnReset.doClick();
+    }//GEN-LAST:event_menuItemClearAllActionPerformed
+
+    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_menuItemExitActionPerformed
+
+    private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(null,
+                    "<html><center>" +
+                    "newtonian-physics - made by Levs Usitnovs " +
+                    "\n©Levs Ustinovs Licencesed under GPLv2 and higher.",
+                    "About", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_menuItemAboutActionPerformed
 
     private Color getRandomColor() {    //genretaes random color
         Random numGen = new Random();
@@ -1063,14 +1150,12 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnResolveForces;
-    private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup btngrpAngle;
     private javax.swing.ButtonGroup btngrpGravity;
     private java.awt.Canvas canvas;
     private javax.swing.JCheckBox chkFriction;
     private javax.swing.JCheckBox chkGravity;
     private javax.swing.JCheckBox chkMass;
-    private javax.swing.JFormattedTextField ftxtFriction;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1109,13 +1194,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemClearAll;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemHelp;
-    private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JMenu menufFile;
     private javax.swing.JPanel pnlForcesResolved;
     private javax.swing.JRadioButton radDegrees;
     private javax.swing.JRadioButton radRadians;
     private javax.swing.JTextField txtA;
     private javax.swing.JTextField txtAngle;
+    private javax.swing.JTextField txtFriction;
     private javax.swing.JTextField txtMagnitude;
     private javax.swing.JTextField txtMass;
     private javax.swing.JTextField txtOverallForce;

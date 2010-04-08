@@ -25,7 +25,8 @@ import java.util.ArrayList;
 public class Object {
     private final static double g = 9.8;   //gravity (acceleration)
     private double mass;  //mass in kilograms
-    //force applied to the object; first force is always weight:
+    //forces applied to the object; first force is always weight and
+    //second is always the reaction to the weight
     private ArrayList<Force> forces = new ArrayList<Force>();
     //resolved forces vertically, horizontally and overall:
     private Force vertically = new Force(0, 90);
