@@ -145,7 +145,10 @@ public class Object {
             //check if the angle is 0...
             //if it is, the force is simply acting to the right of the i
             //component or simply directly to the right:
-            if(angle==0) iOverall += magn;
+            if(angle==0){
+                iOverall += magn;
+                continue;
+            }
 
             double i, j;    //stores i and j components of current force
 
@@ -183,10 +186,10 @@ public class Object {
         horizontally.setMagnitude(iOverall);
         vertically.setMagnitude(jOverall);
 
-        //  Calculate the overall force using the overall i and j components:
+        ////Calculate the overall force using the overall i and j components:
         //using Pythagora's Theorem (to find magnitude):
         overall.setMagnitude(Math.sqrt(jOverall*jOverall+iOverall*iOverall));
-        //Also: (tah(theta)=j/i) (overall's angle is in degrees!)
+        //Also: (tan(theta)=j/i) (overall's angle is in degrees!)
         overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
     }
 }
