@@ -1,4 +1,3 @@
-
 package graphics;
 
 import java.awt.*;

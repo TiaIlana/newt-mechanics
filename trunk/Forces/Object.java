@@ -34,6 +34,8 @@ public class Object {
     private Force overall = new Force(0);
     private double friction;    //stores value of friction of the object/surface
     private boolean frictionF = false;  //flag for set and not set firction
+    //flag for if the resolved forces are up to date:
+    private boolean resolved = false;
 
     //constructors
     public Object(){    
@@ -78,7 +80,12 @@ public class Object {
     public Force getForce(int i){   //returns a force by it's index
         return forces.get(i);
     }
-
+    public boolean isResolved(){
+        return resolved;
+    }
+    public double getMass(){
+        return mass;
+    }
 
     //remover functions
     public void removeForce(Force force){
@@ -112,11 +119,14 @@ public class Object {
     public void setMass(double mass){
         //set's the mass of the object
         this.mass = mass;
+
+        /*  Code not needed anymore...
         //add the cancelling out forces produced by gravity*mass: (action+reaction=0)
         Force force = new Force(g*mass, 270);   //temporrary
         this.forces.add(force);  //F=ma; 270 degrees is acting north
         force = new Force((-g)*mass, 270);    //reaction force; reusing temp variables
         this.forces.add(force);
+        */
     }
     public void addForces(Force... forces){
         //NOTE: the parameter can be a single force...
@@ -124,6 +134,9 @@ public class Object {
         for(int i=0; i < forces.length; i++){
             this.forces.add(forces[i]);   //first force is always weight
         }
+    }
+    public void isResolved(boolean flag){
+        resolved = flag;
     }
 
     //the following function will resolve the forces into 3 (vertically,
@@ -180,7 +193,8 @@ public class Object {
             //take it away from the i component of the overall calulation
             iOverall -= resistingForce;
         }
-
+        //check if mass is set and if it is add the effect to the overall:
+        if(mass!=0) jOverall -= g*mass;
 
         //set the overall horrizontall magnitude (i) and verticall magnitude (j)
         horizontally.setMagnitude(iOverall);
@@ -191,5 +205,9 @@ public class Object {
         overall.setMagnitude(Math.sqrt(jOverall*jOverall+iOverall*iOverall));
         //Also: (tan(theta)=j/i) (overall's angle is in degrees!)
         overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
+
+        //set the resolved flag to true, since
+        //the overall force has been updated:
+        resolved = true;
     }
 }

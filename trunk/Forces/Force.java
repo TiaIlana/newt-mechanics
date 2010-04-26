@@ -25,10 +25,10 @@ import java.awt.Color;
 public class Force {
     //the angle is recorder 0 if it is poiting east at 0 degrees
     private double angle;  //stores the angle of the force (direction)
-    private boolean angleF;  //true - degrees, false - radians
+    private boolean angleF = true;  //true - degrees, false - radians
     private double magnitude;   //stores the magnitude of the force in newtons
     //stores the color of the force; used as an identifier:
-    private Color color = new Color(255, 255, 255); //by default it's black
+    private Color color = new Color(0, 0, 0); //by default it's black
 
     //constructors
     public Force(double magnitude){
@@ -39,7 +39,6 @@ public class Force {
     public Force(double magnitude, double angle){
         this.magnitude = magnitude;
         setAngle(angle);
-        angleF = true;  //by default we use degrees
     }
     public Force(Force force){
         this.magnitude = force.getMagnitude();

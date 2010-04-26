@@ -25,10 +25,11 @@ import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
 import Forces.Force;
 import graphics.*;
-import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.Random;
+import java.awt.image.*;
+import javax.swing.*;
 
 
 /**
@@ -38,7 +39,7 @@ import java.util.Random;
 public class MainForm extends javax.swing.JFrame {
     Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
     Options options = new Options();  //for setting options
-    //for formting
+    //for formating number to 3 decimal places:
     java.text.DecimalFormat format = new java.text.DecimalFormat("###.###");
     
 	/** Creates new form MainForm */
@@ -121,6 +122,7 @@ public class MainForm extends javax.swing.JFrame {
         canvas = new CustomCanvas();
         jMenuBar1 = new javax.swing.JMenuBar();
         menufFile = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         menuItemExit = new javax.swing.JMenuItem();
         menuEdit = new javax.swing.JMenu();
         menuItemClearAll = new javax.swing.JMenuItem();
@@ -233,11 +235,11 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                            .addComponent(txtA, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                            .addComponent(txtV, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                            .addComponent(txtU, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                            .addComponent(txtS, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)))
+                            .addComponent(txtT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                            .addComponent(txtA, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                            .addComponent(txtV, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                            .addComponent(txtU, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                            .addComponent(txtS, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)))
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -425,8 +427,7 @@ public class MainForm extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtAngle, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblAngle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(16, 16, 16))
+                                        .addComponent(lblAngle, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel7)
                                         .addGap(3, 3, 3)
@@ -504,11 +505,6 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txtMass.setEnabled(false);
-        txtMass.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtMassKeyTyped(evt);
-            }
-        });
 
         chkMass.setText("Mass:");
         chkMass.addActionListener(new java.awt.event.ActionListener() {
@@ -590,6 +586,15 @@ public class MainForm extends javax.swing.JFrame {
         canvas.setName("canvas"); // NOI18N
 
         menufFile.setText("File");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Save image...");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menufFile.add(jMenuItem1);
 
         menuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         menuItemExit.setText("Exit");
@@ -687,6 +692,9 @@ public class MainForm extends javax.swing.JFrame {
                 //if it is then disable the resolve forces button
                 btnResolveForces.setEnabled(false);
             }
+            
+            //update the resolved sttaus of the object:
+            object.isResolved(false);
 
             //update canvas:
             canvas.repaint();
@@ -714,8 +722,13 @@ public class MainForm extends javax.swing.JFrame {
             txtVector.setText("");
             txtOverallForce.setText("");
         }
+        //update the resolved sttaus of the object:
+        object.isResolved(false);
         //repaint graphics
         canvas.repaint();
+
+        //disable finding acceleration
+        btnFindAcc.setEnabled(false);
     }//GEN-LAST:event_btnClearAllActionPerformed
 
     private void chkMassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkMassActionPerformed
@@ -732,6 +745,9 @@ public class MainForm extends javax.swing.JFrame {
         if(!txtMass.getText().isEmpty()){  //if txtMass is not empty
             //check if gravity is set...
             if(options.getGravity()){
+                //ennable finding acceleration:
+                btnFindAcc.setEnabled(true);
+
                 try{    //set mass
                     object.setMass(Double.parseDouble(txtMass.getText()));
                 }
@@ -781,12 +797,10 @@ public class MainForm extends javax.swing.JFrame {
         //and in vector format: (rounding off to 3 decimal places
         txtVector.setText(format.format(object.getI())+"i " +
                 format.format(object.getJ())+"j");
-    }//GEN-LAST:event_btnResolveForcesActionPerformed
 
-    private void txtMassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMassKeyTyped
-            //something has been entered, thus...
-            btnResolveForces.setEnabled(true);  //since mass produces a force (with gravity)
-    }//GEN-LAST:event_txtMassKeyTyped
+        //repaint our canvas:
+        canvas.repaint();
+    }//GEN-LAST:event_btnResolveForcesActionPerformed
 
     private void txtSKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSKeyPressed
         if(evt.getKeyCode() == 10){ //if user presed enter
@@ -992,6 +1006,9 @@ public class MainForm extends javax.swing.JFrame {
             //set the forcus on the magnitude text box for entering more forces
             txtMagnitude.requestFocus();
 
+            //update the resolved sttaus of the object:
+            object.isResolved(false);
+
             //update the canvas:
             canvas.repaint();
         }
@@ -1024,26 +1041,38 @@ public class MainForm extends javax.swing.JFrame {
         //set all the controlls to their defaults:
         radDegrees.setSelected(true);
         chkGravity.setSelected(true);
-        //note: method doClick runs the on event code as if user had clicked
-        //      on the component themselves....
-        chkFriction.doClick();
-        chkMass.doClick();
+        chkFriction.setSelected(false);
+        txtFriction.setEnabled(false);
+        chkMass.setSelected(false);
+        txtMass.setEnabled(false);
         
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnFindAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindAccActionPerformed
-        
-        
+        //to be safe, check if mass is NOT 0
+        if(object.getMass()==0){    //we don't want division by 0...
+            btnFindAcc.setEnabled(false);
+            return;
+        }
+        //use formula of F=ma to find acceleration
+        double acc = (object.getOverall().getMagnitude())/object.getMass();
+        //place the newly found value into the A txt box field
+        //rounding it off to 3 decimal places...
+        txtA.setText(format.format(acc));
     }//GEN-LAST:event_btnFindAccActionPerformed
 
     private void radDegreesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radDegreesActionPerformed
         //set the options to degress if they are selected:
-        if(radDegrees.isSelected()) options.setAngle(true);
+        if(radDegrees.isSelected()){
+            options.setAngle(true);
+            lblAngle.setText("<html>&deg");     //set the lable to degrees sign
+        }
     }//GEN-LAST:event_radDegreesActionPerformed
 
     private void radRadiansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radRadiansActionPerformed
         //set the options to radians if they are selected:
         if(radRadians.isSelected()) options.setAngle(false);
+        lblAngle.setText("rad");    //set the lable to lable to radians sign
     }//GEN-LAST:event_radRadiansActionPerformed
 
     private void menuItemClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemClearAllActionPerformed
@@ -1065,6 +1094,49 @@ public class MainForm extends javax.swing.JFrame {
                     "About", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_menuItemAboutActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        //initialise file chooser
+        JFileChooser fc = new JFileChooser();
+
+        //set settings
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);   //select files only
+        fc.setAcceptAllFileFilterUsed(false);   //disable selection of any file
+        fc.addChoosableFileFilter(new graphics.ImageFilter());  //only images allowed
+
+        //display the file chooser
+        int returnVal = fc.showSaveDialog(this);
+
+        //save the file accordingly or throw an error:
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            //create a buffered image from canvas:
+            BufferedImage outputImage =
+                    (BufferedImage)canvas.createImage(canvas.getWidth(),
+                    canvas.getHeight());
+            canvas.paint(outputImage.createGraphics());
+
+            try{    //write the file according to the selected extension...
+                //retrieve the selected file extension (if any):
+                String ext =
+                        graphics.ImageFilter.getExtension(fc.getSelectedFile());
+                //if there is no extension, write to png (default)
+                if(ext==null){
+                    javax.imageio.ImageIO.write(outputImage, "png",
+                       new java.io.File(fc.getSelectedFile().getPath()+".png"));
+                }
+                //otherwise write the file according to extension selected:
+                else javax.imageio.ImageIO.write(outputImage, ext,
+                      new java.io.File(fc.getSelectedFile().getPath()));
+            }
+            catch(java.io.IOException e){
+                javax.swing.JOptionPane.showMessageDialog(null,
+                    "File could not be saved! Please check file permissions...",
+                    "File saving error...",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     private Color getRandomColor() {    //genretaes random color
         Random numGen = new Random();
         return new Color(numGen.nextInt(255),
@@ -1072,6 +1144,9 @@ public class MainForm extends javax.swing.JFrame {
    }
 
     private class CustomCanvas extends Canvas{
+        Font font = new Font("Calibri", Font.PLAIN, 14);    //default font
+        Font fontHead = new Font("Calibri", Font.BOLD, 14); //heading font
+
         @Override
         public void paint(Graphics g){
             Graphics2D g2 = (Graphics2D) g;
@@ -1098,46 +1173,84 @@ public class MainForm extends javax.swing.JFrame {
             //define the center of the partice for drawing forces as lines:
             Point2D center = new Point2D.Double((double)200, (double)279);
 
-            ////draw a line for each force applied ot the object:
+            ////Draw a line for each force applied ot the object:
             //set the stroke to something thinner:
             g2.setStroke(new BasicStroke(1f));
-            //itterate through iach force and draw it:
+            //itterate through each force and draw it:
             for(int i = 0; i<object.numForces(); i++){
-                //set the folor for the arrow:
+                //set the color for the arrow:
                 g2.setColor(object.getForce(i).getColor());
                 Arrow.draw(g2, center, object.getForce(i), 50, 10);
             }
-            
-        }
 
-        private void drawForceLine(Graphics2D g2, Point2D center,
-                Force force, double length){
-            //for ease of use:
-            double angle = force.getAngle();
-            boolean angleF = force.getAngleFormat();
-            if(!angleF){    //if the angle is in radians
-                angle = Math.toDegrees(angle);  //conver it to degrees
+
+            ////Draw a line for the resolved force if present
+            if(object.isResolved()){    //check if forces are resolved
+                g2.setColor(Color.BLACK);   //set color to black
+                //set the stroke to something thicker:
+                g2.setStroke(new BasicStroke(1.5f));
+                Arrow.draw(g2, center, object.getOverall(),
+                        100, 20);
             }
 
-            //define coordinate variables:
-            //x,y - intial points, xNew,yNew - new points
-            double x, y, xNew, yNew;
+            
+            ////Draw a force table on the canvas with correct collor key:
+            //draw heading:
+            g2.setColor(new Color(0, 0, 0));
+            g2.setFont(fontHead);
+            g2.drawString("Forces:", 0, fontHead.getSize2D());
+            float initX, initY;  //initial coordinates for start of table
+            initX = 5;
+            initY = fontHead.getSize2D();
 
-            //set the initial x and y according to legth specfied:
-            x = length;
-            //no change in y, as the initil point is parallel to the center point:
-            y = 0;
+            //set font and stroke:
+            g2.setStroke(new BasicStroke(1f));
+            g2.setFont(font);
+            float fontHeight = font.getSize2D();    //height of the font
 
-            //use the transofrmation formula to find the xNew and yNew:
-            xNew = (Math.cos(angle*Math.PI/180)*x)-(Math.sin(angle*Math.PI/180)*y);
-            yNew = (Math.sin(angle*Math.PI/180)*x)+(Math.cos(angle*Math.PI/180)*y);
+            //loop through each force
+            for(int i = 0; i<object.numForces(); i++){
+                //coordinates to draw the current force's text at:
+                float x=initX, y=initY;
 
-            //convert the newly found end point of line to a point
-            //relative to the center:
-            Point2D end = new Point2D.Double(xNew+center.getX(),
-                    center.getY()-yNew);
-            //draw the line!
-            g2.draw(new Line2D.Double(center, end));
+                //find our Y coordintae according to how
+                //many forces we already have:
+                y += (i+1)*fontHeight;
+
+                g2.setColor(object.getForce(i).getColor());
+                g2.drawString(object.getForce(i).toString(),
+                        x, y);
+            }
+
+            
+            ////Draw a resolved force text if present:
+            //check if the object's resolved force is up to date:
+            if(object.isResolved()){
+                //draw heading:
+                g2.setColor(new Color(0, 0, 0));
+                g2.setFont(fontHead);
+                g2.drawString("Overall force:", 250, fontHead.getSize2D());
+
+                //draw force text in force format:
+                g2.setColor(object.getOverall().getColor());
+                g2.setFont(font);
+                g2.drawString(object.getOverall().toString(), 255,
+                        fontHead.getSize2D()+font.getSize2D());
+                //and in I and J notation:
+                //(cheating here... using data from a field :P)
+                g2.drawString(txtVector.getText(), 255,
+                        fontHead.getSize2D()+(2*font.getSize2D()));
+            }
+
+            ////Draw text displaying mass (if set):
+            if(object.getMass()!=0){
+                //set color and font:
+                g2.setFont(font);
+                g2.setColor(Color.red);
+                //draw the text at bootom center:
+                g2.drawString("Object mass: "+object.getMass()+
+                        "kg", 150, 400-font.getSize2D());
+            }
         }
     }
 
@@ -1178,6 +1291,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
