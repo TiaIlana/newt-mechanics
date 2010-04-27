@@ -770,24 +770,36 @@ public class MainForm extends javax.swing.JFrame {
             return;
         }
 
-        //check for friction and add it to the object if it is
-        if(!txtFriction.getText().isEmpty()){   //it isn't empty
+        //check for friction and add it to the object if present  
+        if(txtFriction.getText().isEmpty() && chkFriction.isSelected()){
+            javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Please set friction or uncheck the friction check box!",
+                    "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        else if(!txtFriction.getText().isEmpty() && chkFriction.isSelected()){
+            //store firction
+            double friction;
             //set the friction:
             try{
-                object.setFriction(Double.parseDouble(txtFriction.getText()));
+                //try and retrieve the friction from user input:
+                friction = Double.parseDouble(txtFriction.getText());
             }
-            catch(NumberFormatException exc){
+            catch(NumberFormatException exc){   //invalid value entered
                 javax.swing.JOptionPane.showMessageDialog(null, //user notification
                     "Please enter a valid value for friction!", "Error",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
                 return;
             }
-        }
-        else if(txtFriction.getText().isEmpty() && chkFriction.isSelected()){
-            javax.swing.JOptionPane.showMessageDialog(null, //user notification
-                    "Please set friction or uncheck the friction check box!",
-                    "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
+            //check if is 0 or negative: (don't allow 0's - no point!)
+            if(friction <= 0){
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Friction cannot be 0 or negative!", "Error",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            //otherwise asign the firciton to the object:
+            else object.setFriction(friction);
         }
 
         object.resolve();   //resolve the forces
@@ -980,6 +992,18 @@ public class MainForm extends javax.swing.JFrame {
                     "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
                 return;
             }
+            //check if magnitude is 0:
+            if(magnitude==0){   //don't allow 0, since it does nothing...
+                javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                    "Magnitude cannot be 0!",
+                    "Invalid Value", javax.swing.JOptionPane.WARNING_MESSAGE);
+                //clear the magnitude text box
+                txtMagnitude.setText(null);
+                //set focus on magnitude text box
+                txtMagnitude.requestFocus();
+                return;
+            }
+
             Color randColor = getRandomColor(); //to asign a color to the force
             Force force = new Force(magnitude, angle, options.getAngle(),
                     randColor);    //for entered force
@@ -1038,14 +1062,17 @@ public class MainForm extends javax.swing.JFrame {
         //set the mass to 0:
         object.setMass(0);
 
+        //clear all text boxes
+        txtFriction.setText(null);
+        txtMass.setText(null);
+
         //set all the controlls to their defaults:
         radDegrees.setSelected(true);
         chkGravity.setSelected(true);
         chkFriction.setSelected(false);
         txtFriction.setEnabled(false);
         chkMass.setSelected(false);
-        txtMass.setEnabled(false);
-        
+        txtMass.setEnabled(false);   
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnFindAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindAccActionPerformed
@@ -1185,7 +1212,15 @@ public class MainForm extends javax.swing.JFrame {
 
 
             ////Draw a line for the resolved force if present
-            if(object.isResolved()){    //check if forces are resolved
+            //check if forces are resolved and magnitude isn't 0:
+            //NOTE: due to the nature of double, the double is rounded
+            //      off into a string with 5 decimal precision, then
+            //      converted back to a double and ONLY then compared...
+            if(object.isResolved() &&
+                    Double.parseDouble(format.format(
+                    object.getOverall().getMagnitude())) != 0){
+                //debug
+                System.out.println(object.getOverall().getMagnitude());
                 g2.setColor(Color.BLACK);   //set color to black
                 //set the stroke to something thicker:
                 g2.setStroke(new BasicStroke(1.5f));

@@ -17,6 +17,9 @@ public class Arrow{
         else{   //otherwise simply make it negative:
             angle = -angle;
         }
+        //NOTE: we are making the angle negative because of the way
+        //      the AffineTransform class operates differs from the
+        //      way the rest of the program is implempt
 
         //create new path for the arrow
         Path2D.Double path = new Path2D.Double();

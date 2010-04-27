@@ -142,6 +142,9 @@ public class Object {
     //the following function will resolve the forces into 3 (vertically,
     //gorizontally and overall)
     public void resolve(){
+        //before starting, neutralize the list of forces:
+        //neutralize(forces);
+
         //stores the angle and magnitude of the current force:
         double angle, magn;
         //stores the overall i and j vector components
@@ -149,17 +152,31 @@ public class Object {
         
         //resolve each force into i and j vector components
         for(int index = 0; index < forces.size(); index++){
+
             //check if magnitude is 0, if it is move on to the next force
             //(if magnitude of the force is 0, it has no effect)
             if(forces.get(index).getMagnitude() == 0) continue;
             angle = forces.get(index).getAngle();
             magn = forces.get(index).getMagnitude();
 
-            //check if the angle is 0...
-            //if it is, the force is simply acting to the right of the i
+            ////check if the angle is a right angle:
+            ////if it is, the force is simply acting north, south, east and
+            ////west accordingly (no need for further calculation)
             //component or simply directly to the right:
             if(angle==0){
                 iOverall += magn;
+                continue;
+            }
+            else if(angle==180){
+                iOverall -= magn;
+                continue;
+            }
+            else if(angle==90){
+                jOverall += magn;
+                continue;
+            }
+            else if(angle==270){
+                jOverall -= magn;
                 continue;
             }
 
@@ -181,33 +198,100 @@ public class Object {
             iOverall += i;
             jOverall += j;
         }
-        //check if friction and mass are set (since they produce counter force):
+
+
+        ////check if friction and mass are set
+        ///(since they produce counter force):
         if(frictionF && mass != 0){      //mass of 0 is like mass not set...
-            //calculate the effect produced on the i component:
-            //(since friction only affects horizontal movement):
+            ////calculate the effect produced on the i component:
+            ////(since friction only affects horizontal movement):
             double reactionForce;   //magnitude of the reaction force
             double resistingForce;  //the magnitude of the resistance
+
             reactionForce = mass*g;     //action=reaction
             resistingForce = friction*reactionForce;    //F=mu*R - mechanics!
 
-            //take it away from the i component of the overall calulation
-            iOverall -= resistingForce;
+            //check if the absolute (takes away the negative sign) overall
+            //i component is bigger than or equal to the resisting force:
+            if(resistingForce >= Math.abs(iOverall)){
+                //the i overall becomes 0, since friction doesnt let it move:
+                iOverall = 0;
+            }
+            else{   //the iOverall is bigger than resisting force
+                //check if i was negative or positive:
+                if(iOverall > 0) iOverall = iOverall - resistingForce;
+                else if(iOverall < 0) iOverall = iOverall + resistingForce;
+            }
         }
         //check if mass is set and if it is add the effect to the overall:
         if(mass!=0) jOverall -= g*mass;
 
+        
         //set the overall horrizontall magnitude (i) and verticall magnitude (j)
         horizontally.setMagnitude(iOverall);
         vertically.setMagnitude(jOverall);
 
-        ////Calculate the overall force using the overall i and j components:
-        //using Pythagora's Theorem (to find magnitude):
+        
+        ////Calculate the overall force using the overall i and j components
+        //using Pythagora's Theorem (to find magnitude)...
         overall.setMagnitude(Math.sqrt(jOverall*jOverall+iOverall*iOverall));
-        //Also: (tan(theta)=j/i) (overall's angle is in degrees!)
-        overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
+
+        //check if I is 0, negative or positive:
+        if (iOverall < 0){  //i is negative
+            //calculate the angle of the resultant force between I and J:
+            double angl = Math.toDegrees(Math.atan(jOverall/iOverall));
+            //set the angle and add 180 degrees to it since, I is negative:
+            overall.setAngle(angl+180);
+        }
+        else if(iOverall > 0){  //i is positive
+            //check if J is 0 or isn't, since if it is we cannot use the formula
+            //to find the angle (atan(0) returns 0...)
+            if(jOverall!=0){
+                //(tan(theta)=j/i) (overall's angle is stored in degrees!)
+                overall.setAngle(Math.toDegrees(Math.atan(jOverall/iOverall)));
+            }
+            else{   //in case J is 0, we simply need to take a look at I...
+                //if I it's negative, then angle is 180:
+                if(iOverall < 0) overall.setAngle(180);
+                //otherwise it is positive and the angle is 0:
+                else overall.setAngle(0);
+            }
+        }
+        else{   //in case it I is 0, there is only the J force acting (vertical)
+            //check wether the J component is negative or positive (or 0)
+            //and asign the corresponding angles:
+            if(jOverall < 0) overall.setAngle(180);
+            else if (jOverall > 0) overall.setAngle(90);
+            else overall.setAngle(0);  //J is 0, thus there is no force or angle
+        }
 
         //set the resolved flag to true, since
         //the overall force has been updated:
         resolved = true;
+    }
+
+    private void neutralize(ArrayList<Force> forces){
+        /*
+         * this function takes an array list of forces converts all negative
+         * magnitudes of all the forces in the array list to positive ones
+         * while rotating the angle. It is used to avoid some algorithmic
+         * dificulties in the resolve() function...
+        */
+
+        //loop through each force:
+        for(int i = 0; i < forces.size(); i++){
+            //check if magntiude if is negative:
+            if(forces.get(i).getMagnitude() < 0){
+                //take away 180 degrees or radians from the angle accordingly:
+                if(forces.get(i).getAngleFormat())  //in degress
+                    forces.get(i).setAngle(forces.get(i).getAngle()-180);
+                else forces.get(i). //angle is in radians, thus convert it:
+                        setAngle(forces.get(i).getAngle()-Math.toRadians(180));
+                //make the force positive:
+                forces.get(i).setMagnitude(
+                        Math.abs(forces.get(i).getMagnitude()));
+            }
+            //if the magnitude is not negative, nothing should be done...
+        }
     }
 }
