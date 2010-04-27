@@ -23,7 +23,7 @@ package main;
 
 import SUVAT.Suvat;
 import primitive_wrapers.ODouble;
-import Forces.Force;
+import Forces.*;
 import graphics.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -37,7 +37,7 @@ import javax.swing.*;
  * @author  __USER__
  */
 public class MainForm extends javax.swing.JFrame {
-    Forces.Object object = new Forces.Object(); //the object forces will be applied uppon
+    Forces.Particle particle = new Forces.Particle(); //the particle forces will be applied uppon
     Options options = new Options();  //for setting options
     //for formating number to 3 decimal places:
     java.text.DecimalFormat format = new java.text.DecimalFormat("###.###");
@@ -138,6 +138,8 @@ public class MainForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Newtonian Physics");
+        setIconImage(new 
+            ImageIcon(getClass().getResource("icon.png")).getImage());
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -494,6 +496,11 @@ public class MainForm extends javax.swing.JFrame {
 
         chkGravity.setSelected(true);
         chkGravity.setText("Gravity");
+        chkGravity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkGravityActionPerformed(evt);
+            }
+        });
 
         jLabel15.setText("<html><u>Particle and envoriment options:</u>");
 
@@ -505,6 +512,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txtMass.setEnabled(false);
+        txtMass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMassKeyPressed(evt);
+            }
+        });
 
         chkMass.setText("Mass:");
         chkMass.addActionListener(new java.awt.event.ActionListener() {
@@ -523,6 +535,11 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         txtFriction.setEnabled(false);
+        txtFriction.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtFrictionKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -683,8 +700,8 @@ public class MainForm extends javax.swing.JFrame {
                     javax.swing.JOptionPane.WARNING_MESSAGE);
         }
         else{
-            //remove the selected force from the object
-            object.removeForce(selected);
+            //remove the selected force from the particle
+            particle.removeForce(selected);
             //remove the item from the list according to selected index
             list.remove(selected);
             
@@ -693,8 +710,8 @@ public class MainForm extends javax.swing.JFrame {
                 btnResolveForces.setEnabled(false);
             }
             
-            //update the resolved sttaus of the object:
-            object.isResolved(false);
+            //update the resolved sttaus of the particle:
+            particle.isResolved(false);
 
             //update canvas:
             canvas.repaint();
@@ -714,16 +731,16 @@ public class MainForm extends javax.swing.JFrame {
             list.removeAllElements();
             //update lstForces
             lstForces.setModel(list);
-            //clear all the forces applied to the object
-            object.clearAllForces();
+            //clear all the forces applied to the particle
+            particle.clearAllForces();
             //disable the resolve button
             btnResolveForces.setEnabled(false);
             //remove all values from the resolved forces pane:
             txtVector.setText("");
             txtOverallForce.setText("");
         }
-        //update the resolved sttaus of the object:
-        object.isResolved(false);
+        //update the resolved sttaus of the particle:
+        particle.isResolved(false);
         //repaint graphics
         canvas.repaint();
 
@@ -741,24 +758,19 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_chkMassActionPerformed
 
     private void btnResolveForcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResolveForcesActionPerformed
-        //if mass is set, add it to the object
+        //if mass is set, add it to the particle
         if(!txtMass.getText().isEmpty()){  //if txtMass is not empty
-            //check if gravity is set...
-            if(options.getGravity()){
-                //ennable finding acceleration:
-                btnFindAcc.setEnabled(true);
-
-                try{    //set mass
-                    object.setMass(Double.parseDouble(txtMass.getText()));
-                }
-                catch(NumberFormatException exc){
-                javax.swing.JOptionPane.showMessageDialog(null, //user notification
-                    "Please enter a valid value for mass!", "Error",
-                    javax.swing.JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            try{    //set mass
+                particle.setMass(Double.parseDouble(txtMass.getText()));
             }
-            //otherwise mass does nothing, since there is no gravity
+            catch(NumberFormatException exc){
+            javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                "Please enter a valid value for mass!", "Error",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            //enable finding acceleration, since we have mass:
+            btnFindAcc.setEnabled(true);
         }
         //if mass check box is set, but txtMass contains no value
         //notify user and disable button...
@@ -770,7 +782,7 @@ public class MainForm extends javax.swing.JFrame {
             return;
         }
 
-        //check for friction and add it to the object if present  
+        //check for friction and add it to the particle if present
         if(txtFriction.getText().isEmpty() && chkFriction.isSelected()){
             javax.swing.JOptionPane.showMessageDialog(null, //user notification
                     "Please set friction or uncheck the friction check box!",
@@ -798,17 +810,17 @@ public class MainForm extends javax.swing.JFrame {
                     javax.swing.JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            //otherwise asign the firciton to the object:
-            else object.setFriction(friction);
+            //otherwise asign the firciton to the particle:
+            else particle.setFriction(friction);
         }
 
-        object.resolve();   //resolve the forces
+        particle.resolve(options.getGravity());   //resolve the forces
 
         //display resultant force in force format:
-        txtOverallForce.setText(object.getOverall().toString(options.getAngle()));
+        txtOverallForce.setText(particle.getOverall().toString(options.getAngle()));
         //and in vector format: (rounding off to 3 decimal places
-        txtVector.setText(format.format(object.getI())+"i " +
-                format.format(object.getJ())+"j");
+        txtVector.setText(format.format(particle.getI())+"i " +
+                format.format(particle.getJ())+"j");
 
         //repaint our canvas:
         canvas.repaint();
@@ -941,7 +953,7 @@ public class MainForm extends javax.swing.JFrame {
 
         //check if there are only 2 suvat missing or less
         if(missing_count <= 2){
-            //construct a suvat object
+            //construct a suvat particle
             Suvat suvat = new Suvat(values, flags);
             //resolve the values
             suvat.resolve();
@@ -949,7 +961,7 @@ public class MainForm extends javax.swing.JFrame {
             //update values
             ODouble newValues[] = new ODouble[5];
             for (int i = 0; i < newValues.length; i++) {
-                    newValues[i] = new ODouble(); //initialise object
+                    newValues[i] = new ODouble(); //initialise particle
                     suvat.retrieve(Suvat.suvatChar[i], newValues[i]); //retrieve value
                     values[i] = newValues[i].val; //update the value
             }
@@ -1016,8 +1028,8 @@ public class MainForm extends javax.swing.JFrame {
             //update the list box (angle is set according to option):
             list.addElement("<html><font color="+colorHtml+">"+
                     force.toString()+"</font>");
-            //update the list of forces applied to the object
-            object.addForces(force);
+            //update the list of forces applied to the particle
+            particle.addForces(force);
             //clear the entry fields for new entries
             txtAngle.setText("");
             txtMagnitude.setText("");
@@ -1030,8 +1042,8 @@ public class MainForm extends javax.swing.JFrame {
             //set the forcus on the magnitude text box for entering more forces
             txtMagnitude.requestFocus();
 
-            //update the resolved sttaus of the object:
-            object.isResolved(false);
+            //update the resolved sttaus of the particle:
+            particle.isResolved(false);
 
             //update the canvas:
             canvas.repaint();
@@ -1051,16 +1063,11 @@ public class MainForm extends javax.swing.JFrame {
         txtT.setText(null);
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void chkFrictionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkFrictionActionPerformed
-        //enable text entering field acording to the check box status:
-        txtFriction.setEnabled(chkFriction.isSelected());
-    }//GEN-LAST:event_chkFrictionActionPerformed
-
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        //simply reinitialise the Options object:
+        //simply reinitialise the Options particle:
         options = new Options();
         //set the mass to 0:
-        object.setMass(0);
+        particle.setMass(0);
 
         //clear all text boxes
         txtFriction.setText(null);
@@ -1077,12 +1084,12 @@ public class MainForm extends javax.swing.JFrame {
 
     private void btnFindAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindAccActionPerformed
         //to be safe, check if mass is NOT 0
-        if(object.getMass()==0){    //we don't want division by 0...
+        if(particle.getMass()==0){    //we don't want division by 0...
             btnFindAcc.setEnabled(false);
             return;
         }
         //use formula of F=ma to find acceleration
-        double acc = (object.getOverall().getMagnitude())/object.getMass();
+        double acc = (particle.getOverall().getMagnitude())/particle.getMass();
         //place the newly found value into the A txt box field
         //rounding it off to 3 decimal places...
         txtA.setText(format.format(acc));
@@ -1164,6 +1171,75 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void txtMassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMassKeyPressed
+        if(evt.getKeyCode() == 10){     //if enter was pressed
+            try{    //try and set mass
+                particle.setMass(Double.parseDouble(txtMass.getText()));
+            }
+            catch(NumberFormatException exc){
+            javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                "Please enter a valid value for mass!", "Error",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            //ennable finding acceleration, since we have mass:
+            btnFindAcc.setEnabled(true);
+            //enable resolving forces, since gravity is a force:
+            btnResolveForces.setEnabled(true);
+
+            //update the canvas:
+            canvas.repaint();
+
+            //loose focus from text field by shifting focus to canvas:
+            canvas.requestFocus();
+        }
+    }//GEN-LAST:event_txtMassKeyPressed
+
+    private void chkGravityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGravityActionPerformed
+        //asign the status of gravity according to selection:
+        options.setGravity(chkGravity.isSelected());
+        //change the status to unresolved
+        //since enviroment parameters have changed:
+        particle.resolve(false);
+    }//GEN-LAST:event_chkGravityActionPerformed
+
+    private void txtFrictionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFrictionKeyPressed
+        if(evt.getKeyCode() == 10){  //if enter was pressed
+            if(!txtFriction.getText().isEmpty() && chkFriction.isSelected()){
+                //store temp. friction:
+                double friction;
+                try{
+                    //try and retrieve the friction from user input:
+                    friction = Double.parseDouble(txtFriction.getText());
+                }
+                catch(NumberFormatException exc){   //invalid value entered
+                    javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                        "Please enter a valid value for friction!", "Error",
+                        javax.swing.JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                //check if is 0 or negative: (don't allow 0's - no point!)
+                if(friction <= 0){
+                    javax.swing.JOptionPane.showMessageDialog(null, //user notification
+                        "Friction cannot be 0 or negative!", "Error",
+                        javax.swing.JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                //otherwise asign the firciton to the particle:
+                else particle.setFriction(friction);
+
+                //update canvas:
+                canvas.repaint();
+            }
+        }
+    }//GEN-LAST:event_txtFrictionKeyPressed
+
+    private void chkFrictionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkFrictionActionPerformed
+        //update availability of friction text box
+        //accordig to status of check box:
+        txtFriction.setEnabled(chkFriction.isSelected());
+    }//GEN-LAST:event_chkFrictionActionPerformed
+
     private Color getRandomColor() {    //genretaes random color
         Random numGen = new Random();
         return new Color(numGen.nextInt(255),
@@ -1190,24 +1266,24 @@ public class MainForm extends javax.swing.JFrame {
 
             //create particle model:
             //(NOTE: 259 instead of 260 is used, since antialiasing is on!)
-            Ellipse2D.Double particle =
+            Ellipse2D.Double particleModel =
                     new Ellipse2D.Double(180, 259, 40, 40);
             //set the stroke to something thicker
             g2.setStroke(new BasicStroke(2.5f));
-            //draw the object...
-            g2.draw(particle);
+            //draw the particle...
+            g2.draw(particleModel);
 
             //define the center of the partice for drawing forces as lines:
             Point2D center = new Point2D.Double((double)200, (double)279);
 
-            ////Draw a line for each force applied ot the object:
+            ////Draw a line for each force applied ot the particle:
             //set the stroke to something thinner:
             g2.setStroke(new BasicStroke(1f));
             //itterate through each force and draw it:
-            for(int i = 0; i<object.numForces(); i++){
+            for(int i = 0; i < particle.numForces(); i++){
                 //set the color for the arrow:
-                g2.setColor(object.getForce(i).getColor());
-                Arrow.draw(g2, center, object.getForce(i), 50, 10);
+                g2.setColor(particle.getForce(i).getColor());
+                Arrow.draw(g2, center, particle.getForce(i), 50, 10);
             }
 
 
@@ -1216,15 +1292,15 @@ public class MainForm extends javax.swing.JFrame {
             //NOTE: due to the nature of double, the double is rounded
             //      off into a string with 5 decimal precision, then
             //      converted back to a double and ONLY then compared...
-            if(object.isResolved() &&
+            if(particle.isResolved() &&
                     Double.parseDouble(format.format(
-                    object.getOverall().getMagnitude())) != 0){
+                    particle.getOverall().getMagnitude())) != 0){
                 //debug
-                System.out.println(object.getOverall().getMagnitude());
+                System.out.println(particle.getOverall().getMagnitude());
                 g2.setColor(Color.BLACK);   //set color to black
                 //set the stroke to something thicker:
                 g2.setStroke(new BasicStroke(1.5f));
-                Arrow.draw(g2, center, object.getOverall(),
+                Arrow.draw(g2, center, particle.getOverall(),
                         100, 20);
             }
 
@@ -1244,7 +1320,7 @@ public class MainForm extends javax.swing.JFrame {
             float fontHeight = font.getSize2D();    //height of the font
 
             //loop through each force
-            for(int i = 0; i<object.numForces(); i++){
+            for(int i = 0; i<particle.numForces(); i++){
                 //coordinates to draw the current force's text at:
                 float x=initX, y=initY;
 
@@ -1252,24 +1328,24 @@ public class MainForm extends javax.swing.JFrame {
                 //many forces we already have:
                 y += (i+1)*fontHeight;
 
-                g2.setColor(object.getForce(i).getColor());
-                g2.drawString(object.getForce(i).toString(),
+                g2.setColor(particle.getForce(i).getColor());
+                g2.drawString(particle.getForce(i).toString(),
                         x, y);
             }
 
             
             ////Draw a resolved force text if present:
-            //check if the object's resolved force is up to date:
-            if(object.isResolved()){
+            //check if the particle's resolved force is up to date:
+            if(particle.isResolved()){
                 //draw heading:
                 g2.setColor(new Color(0, 0, 0));
                 g2.setFont(fontHead);
                 g2.drawString("Overall force:", 250, fontHead.getSize2D());
 
                 //draw force text in force format:
-                g2.setColor(object.getOverall().getColor());
+                g2.setColor(particle.getOverall().getColor());
                 g2.setFont(font);
-                g2.drawString(object.getOverall().toString(), 255,
+                g2.drawString(particle.getOverall().toString(), 255,
                         fontHead.getSize2D()+font.getSize2D());
                 //and in I and J notation:
                 //(cheating here... using data from a field :P)
@@ -1278,13 +1354,23 @@ public class MainForm extends javax.swing.JFrame {
             }
 
             ////Draw text displaying mass (if set):
-            if(object.getMass()!=0){
+            if(particle.getMass()!=0){
                 //set color and font:
                 g2.setFont(font);
                 g2.setColor(Color.red);
-                //draw the text at bootom center:
-                g2.drawString("Object mass: "+object.getMass()+
-                        "kg", 150, 400-font.getSize2D());
+                //draw the text in the lower left side:
+                g2.drawString("Particle mass: "+particle.getMass()+
+                        "kg", 10, 400-font.getSize2D());
+            }
+
+            ////Draw text displaying firction if present:
+            if(particle.getFriction() != -1){   //if friction is set
+                //set color and font:
+                g2.setFont(font);
+                g2.setColor(Color.blue);
+                //draw the text in the lower left side, above mass:
+                g2.drawString("Cooficent of friction: "+particle.getFriction()
+                        , 10, 400-2*font.getSize2D());
             }
         }
     }

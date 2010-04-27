@@ -22,7 +22,7 @@ package Forces;
 
 import java.util.ArrayList;
 
-public class Object {
+public class Particle {
     private final static double g = 9.8;   //gravity (acceleration)
     private double mass;  //mass in kilograms
     //forces applied to the object; first force is always weight and
@@ -38,17 +38,17 @@ public class Object {
     private boolean resolved = false;
 
     //constructors
-    public Object(){    
+    public Particle(){
         this.mass = 0;  //by default mass is 0
     }
-    public Object(double mass){
+    public Particle(double mass){
         this.mass = mass;   //asign mass
         Force force = new Force(g*mass, 270);   //temporrary
         this.forces.add(force);  //F=ma; 270 degrees is acting north
         force = new Force((-g)*mass, 270);    //reaction force; reusing temp variables
         this.forces.add(force);
     }
-    public Object(double mass, Force... forces){    //any number of forces can be provided
+    public Particle(double mass, Force... forces){    //any number of forces can be provided
         this.mass = mass;   //asign mass
         Force force = new Force(g*mass, 270);     //temporrary
         this.forces.add(force);     ////F=ma; 270 degrees is acting north
@@ -141,10 +141,7 @@ public class Object {
 
     //the following function will resolve the forces into 3 (vertically,
     //gorizontally and overall)
-    public void resolve(){
-        //before starting, neutralize the list of forces:
-        //neutralize(forces);
-
+    public void resolve(boolean gravity){
         //stores the angle and magnitude of the current force:
         double angle, magn;
         //stores the overall i and j vector components
@@ -223,8 +220,10 @@ public class Object {
                 else if(iOverall < 0) iOverall = iOverall + resistingForce;
             }
         }
-        //check if mass is set and if it is add the effect to the overall:
-        if(mass!=0) jOverall -= g*mass;
+
+        //check if mass is set and gravity is present (passed as paramter)
+        //and apply effect:
+        if(gravity == true && mass != 0) jOverall -= g*mass;
 
         
         //set the overall horrizontall magnitude (i) and verticall magnitude (j)
@@ -260,7 +259,7 @@ public class Object {
         else{   //in case it I is 0, there is only the J force acting (vertical)
             //check wether the J component is negative or positive (or 0)
             //and asign the corresponding angles:
-            if(jOverall < 0) overall.setAngle(180);
+            if(jOverall < 0) overall.setAngle(270);
             else if (jOverall > 0) overall.setAngle(90);
             else overall.setAngle(0);  //J is 0, thus there is no force or angle
         }
@@ -268,30 +267,5 @@ public class Object {
         //set the resolved flag to true, since
         //the overall force has been updated:
         resolved = true;
-    }
-
-    private void neutralize(ArrayList<Force> forces){
-        /*
-         * this function takes an array list of forces converts all negative
-         * magnitudes of all the forces in the array list to positive ones
-         * while rotating the angle. It is used to avoid some algorithmic
-         * dificulties in the resolve() function...
-        */
-
-        //loop through each force:
-        for(int i = 0; i < forces.size(); i++){
-            //check if magntiude if is negative:
-            if(forces.get(i).getMagnitude() < 0){
-                //take away 180 degrees or radians from the angle accordingly:
-                if(forces.get(i).getAngleFormat())  //in degress
-                    forces.get(i).setAngle(forces.get(i).getAngle()-180);
-                else forces.get(i). //angle is in radians, thus convert it:
-                        setAngle(forces.get(i).getAngle()-Math.toRadians(180));
-                //make the force positive:
-                forces.get(i).setMagnitude(
-                        Math.abs(forces.get(i).getMagnitude()));
-            }
-            //if the magnitude is not negative, nothing should be done...
-        }
     }
 }
