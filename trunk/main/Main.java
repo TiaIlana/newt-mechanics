@@ -20,7 +20,7 @@ To contact the author please email to levi.ustinov@gmail.com.
 
 package main;
 
-public class DemoTestCase {
+public class Main {
 	public static void main(String[] args) {
                 //sets the look and feel of swing UI to windows
                 //since the user will most likely use windows...

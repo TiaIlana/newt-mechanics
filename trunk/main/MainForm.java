@@ -1068,6 +1068,8 @@ public class MainForm extends javax.swing.JFrame {
         options = new Options();
         //set the mass to 0:
         particle.setMass(0);
+        //turn off friction:
+        particle.clearFriction();
 
         //clear all text boxes
         txtFriction.setText(null);
@@ -1079,7 +1081,10 @@ public class MainForm extends javax.swing.JFrame {
         chkFriction.setSelected(false);
         txtFriction.setEnabled(false);
         chkMass.setSelected(false);
-        txtMass.setEnabled(false);   
+        txtMass.setEnabled(false);
+
+        //repaint the canvas
+        canvas.repaint();
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnFindAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindAccActionPerformed
@@ -1295,8 +1300,6 @@ public class MainForm extends javax.swing.JFrame {
             if(particle.isResolved() &&
                     Double.parseDouble(format.format(
                     particle.getOverall().getMagnitude())) != 0){
-                //debug
-                System.out.println(particle.getOverall().getMagnitude());
                 g2.setColor(Color.BLACK);   //set color to black
                 //set the stroke to something thicker:
                 g2.setStroke(new BasicStroke(1.5f));
@@ -1360,17 +1363,33 @@ public class MainForm extends javax.swing.JFrame {
                 g2.setColor(Color.red);
                 //draw the text in the lower left side:
                 g2.drawString("Particle mass: "+particle.getMass()+
-                        "kg", 10, 400-font.getSize2D());
+                        "kg", 10, 380-font.getSize2D());
             }
 
-            ////Draw text displaying firction if present:
+            ////Draw text displaying friction if present:
             if(particle.getFriction() != -1){   //if friction is set
                 //set color and font:
                 g2.setFont(font);
                 g2.setColor(Color.blue);
                 //draw the text in the lower left side, above mass:
                 g2.drawString("Cooficent of friction: "+particle.getFriction()
-                        , 10, 400-2*font.getSize2D());
+                        , 10, 380-2*font.getSize2D());
+            }
+
+            ////Draw text displaying whether gravity is on or off:
+            if(options.getGravity()){   //gravity is set to on
+                //set color and font:
+                g2.setFont(font);
+                g2.setColor(Color.green);
+                //draw the text just below mass:
+                g2.drawString("Gravity is on.", 10, 380);
+            }
+            else{   //gravity is set to off
+                //set color and font:
+                g2.setFont(font);
+                g2.setColor(Color.green);
+                //draw the text just below mass:
+                g2.drawString("Gravity is off.", 10, 380);
             }
         }
     }
